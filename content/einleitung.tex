@@ -4,18 +4,31 @@
 Menschen möchten ihre Umgebung verstehen und überwachen, ob aus reiner Neugier, Kontrolle oder dem Bedürfnis nach mehr Sicherheit.
 In Folge der Digitalisierung werden mehr und mehr Lösungen zur Verfügung gestellt, um diese Bedürfnisse der Menschen zu stillen. Bewohner können sich selbst, sowie ihre Sachgegenstände und ihren Lebensraum mit der Hilfe dieser Lösungen schützen und kontrollieren. Mit wenig Aufwand ist es bereits möglich die Haustür per Bildübertragung zu überwachen oder Bewegungen im Heim zu erkennen.
 
-Je nach Besitz, sozialem Umfeld und persönlichem Interesse unterscheiden sich jedoch die Kontroll- bzw Überwachungsbedürfnisse der Menschen. Zu erhaltene Lösungen sind meist starr von den verknüpfbaren Sensoren und können nicht übergreifend die jeweiligen Anforderungen der Bewohner erfüllen.
-Eine individuelle Zusammenstellung von Überwachungskomponenten und eine übergreifende Auswertung der resultierenden Werte sind jedoch für viele Bewohner von großem Nutzen. Beispielsweise kann ein Nutzer den optimalen Zeitpunkt und Zeitraum zum Lüften ermitteln aus den Werten von Temperatur, Luftgas und Fenster Sensoren. Es kann erkannt werden, dass wenn die CO\textsubscript{2} Konzentration ansteigt, das Fenster jedoch geschlossen ist, das Öffnen des Fensters eine positive Auswirkung auf die Luftqualität erzeugt. Eine kalte Außentemperatur kann jedoch bei zu langem Öffnen des Fensters die Raumtemperatur negativ beeinflussen. Deshalb wird nach erreichen einer akzeptaplen CO\textsubscript{2} Konzentration die Empfehlung gegeben, das Fenster wieder zu schließen.
+Je nach Besitz, sozialem Umfeld und persönlichem Interesse unterscheiden sich jedoch die Kontroll- bzw. Überwachungsbedürfnisse der Menschen. Zu erhaltene Lösungen sind meist starr von den verknüpfbaren Sensoren und können nicht übergreifend die jeweiligen Anforderungen der Bewohner erfüllen.
+Eine individuelle Zusammenstellung von Überwachungskomponenten und eine übergreifende Auswertung der resultierenden Werte sind jedoch für viele Bewohner von großem Nutzen. Beispielsweise kann ein Nutzer den optimalen Zeitpunkt und Zeitraum zum Lüften ermitteln aus den Werten von Temperatur, Luftgas und Fenster Sensoren. Es kann erkannt werden, dass wenn die CO\textsubscript{2} Konzentration ansteigt, das Fenster jedoch geschlossen ist, das Öffnen des Fensters eine positive Auswirkung auf die Luftqualität erzeugt. Eine kalte Außentemperatur kann jedoch bei zu langem Öffnen des Fensters die Raumtemperatur negativ beeinflussen. Deshalb wird nach erreichen einer akzeptablen CO\textsubscript{2} Konzentration die Empfehlung gegeben, das Fenster wieder zu schließen.
 
 Ein Zusammenspiel unterschiedlicher Sensoren kann in vielen Anwendungsbereichen eine positive Auswirkung auf die Lebensqualität oder auf die Sicherheit der Bewohner bewirken.
+
 \section{Ziel}
-Ziel dieser Arbeit ist es eine mögliche Lösung zu geben Sensordaten zu erhalten und aus den ermittelten Sensordaten Verknüpfungen herzustellen. Sensordaten sollen übergreifend in Relation gesetzt werden. Durch mögliche Abhängigkeiten können Nutzern Handlungsempfehlungen zur Verfügung gestellt werden.
+Ziel dieser Arbeit ist es eine mögliche Lösung zu erarbeiten, die Werte aus verschieden Sensoren ermittelt, um daraus Verknüpfungen herzustellen. Die Sensordaten sollen übergreifend in Relation gesetzt werden. Durch mögliche Abhängigkeiten können Nutzern Handlungsempfehlungen zur Verfügung gestellt werden.
 
-Des Weiteren soll ein Ausblick auf eine mögliche Erweiterung um eine vorausschauende Datenverarbeitung gegeben werden. So kann beispielsweise im Fall der Luftqualität schon im Vorhinein auf Basis alter Daten eine Verschlechterung erkannt werden, sodass Gegenmaßnahmen frühzeitig getroffen werden können.
+Des Weiteren soll ein Ausblick auf eine mögliche Erweiterung gegeben werden, wie sich Vorhersagen, auf Basis der bestehenden Daten, zu einzelnen Sensor bestimmen lassen und der Benutzer dadurch profitieren kann. So kann beispielsweise im Fall der Luftqualität schon im Vorhinein auf Basis alter Daten eine Verschlechterung erkannt werden, sodass Gegenmaßnahmen frühzeitig getroffen werden können.
 \section{Aufgabenstellung}
+Es soll eine Android-App entwickelt werden, die Werte von verschiedenen Sensoren anzeigt und Empfehlungen ausgibt. Außerdem sollen vom Benutzer Grenzwerte selbstständig festgelegt werden können und diesen benachrichtigen, falls der entsprechende Wert unter- oder überschritten wird. 
+Folgende Aufgaben soll die App dabei abdecken:
+\begin{itemize}
+	\item Anzeige eines Live-Bild einer Kamera
+	\item Anzeige der aktuellen Temperatur
+	\item Anzeige der aktuellen Luftfeuchtigkeit
+	\item Anzeige eines Verlaufs der Temperatur bzw. Luftfeuchtigkeit
+	\item Anzeige eines Status, ob ein Fester geöffnet oder geschlossen ist
+\end{itemize} 
+Die verschiedenen Sensoren werden an einem Raspberry Pi angeschlossen und deren Werte in Datenbanktabellen erfasst. Diese ermittelten Werte der Sensoren sollen anschließend über einen Webserver von der App aufgerufen werden können.
+
+
 \section{Struktur der Arbeit}
-Um das Ziel dieser Arbeit zu erreichen, wird die Arbeit in drei Phasen aufgeteilt. In der ersten Phase wird ermittelt mit welchen Technologien und Lösungen die verschiedenen Sensoren angesprochen und ausgelesen werden können. Anschließend wird eine Benutzerschnittstelle entwickelt um die relevanten Werte zu präsentieren. Der Fokus liegt in dieser Phase allein die Datener zu erhalten und zu verwalten. Um in den nächsten Phasen mit den Daten arbeiten zu können, müssen diese zentral gespeichert werden.
+Um das Ziel dieser Arbeit zu erreichen, wird die Arbeit in drei Phasen aufgeteilt. In der ersten Phase wird ermittelt mit welchen Technologien und Lösungen die verschiedenen Sensoren angesprochen und ausgelesen werden können. Anschließend wird eine Benutzerschnittstelle entwickelt, um die relevanten Werte zu präsentieren. Der Fokus liegt in dieser Phase allein, in der Datenbeschaffung und Datenverwaltung. Um in den nächsten Phasen mit den Daten arbeiten zu können, müssen diese zentral gespeichert werden.
 
-In der nächsten Phase sollen Zusammenhänge zwischen den erhalteten Daten der Sensoren erkannt werden. Auf den Zusammenhängen basierend, werden Regeln definiert, die dem Bewohner ermöglichen gewünschte Zielwerte zu erreichen. Je nach Sensor und seiner Funktionalität weicht der Aufgabenbereich des Sensors voneinander ab. Der Kern dieser Phase liegt in der Definierung der Regeln und Korrelation der Daten.
+In der zweiten Phase sollen Zusammenhänge zwischen den erhaltenen Daten der Sensoren erkannt werden. Basierend aus den Zusammenhängen, werden Regeln definiert, die dem Bewohner ermöglichen gewünschte Zielwerte zu erreichen. Je nach Sensor und seiner Funktionalität, wird ermittelt inwiefern eine Abhängigkeit zu anderen Sensorwerten besteht. Der Kern dieser Phase liegt in der Definition der Regeln und Korrelation der Daten.
 
-Aufbauend auf die vorausgehenden Phasen wird in der dritten Phase untersucht, inwiefern Sensordaten vorhergesagt werden können. Durch das Vorhersagen von Daten können präziser und effizienter Maßnahmen vom Nutzer getroffen werden. Diese Phase wird theoretisch innerhalb dieser Arbeit behandelt. Es ist nicht vorgesehen, diese auch praktisch umzusetzen.
+Aufbauend auf die vorausgehenden Phasen wird in der dritten Phase untersucht, inwiefern einzelne Sensordaten vorhergesagt werden können. Durch das Vorhersagen von Daten können Maßnahmen vom Nutzer präziser und effizienter getroffen werden. Diese Phase wird theoretisch innerhalb dieser Arbeit behandelt. Es ist nicht vorgesehen, diese auch praktisch umzusetzen.
