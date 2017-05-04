@@ -1,35 +1,31 @@
 \chapter{Einleitung}
 
 \section{Motivation}
-Menschen möchten ihre Umgebung verstehen und überwachen, ob aus reiner Neugier, Kontrolle oder dem Bedürfnis nach mehr Sicherheit.
-In Folge der Digitalisierung werden mehr und mehr Lösungen zur Verfügung gestellt, um diese Bedürfnisse der Menschen zu stillen. Bewohner können sich selbst, sowie ihre Sachgegenstände und ihren Lebensraum mit der Hilfe dieser Lösungen schützen und kontrollieren. Mit wenig Aufwand ist es bereits möglich die Haustür per Bildübertragung zu überwachen oder Bewegungen im Heim zu erkennen.
+Menschen möchten ihre Umgebung verstehen und überwachen, ob aus reiner Neugier, Kontrolle oder dem Bedürfnis nach mehr Sicherheit. Vor allem wenn es um einen wichtigen Menschen, ein Lebewesen oder eine Sache mit persönlichem Wert geht, möchte man dessen Umgebung optimal setzen. Um eben diesen ``perfekten'' Raum zu gewährleisten, muss die Umgebung kontrolliert, analysiert und gegebenenfalls daraus Vorsichtsmaßnahmen ergriffen werden.
 
-Je nach Besitz, sozialem Umfeld und persönlichem Interesse unterscheiden sich jedoch die Kontroll- bzw. Überwachungsbedürfnisse der Menschen. Zu erhaltene Lösungen sind meist starr von den verknüpfbaren Sensoren und können nicht übergreifend die jeweiligen Anforderungen der Bewohner erfüllen.
-Eine individuelle Zusammenstellung von Überwachungskomponenten und eine übergreifende Auswertung der resultierenden Werte sind jedoch für viele Bewohner von großem Nutzen. Beispielsweise kann ein Nutzer den optimalen Zeitpunkt und Zeitraum zum Lüften ermitteln aus den Werten von Temperatur, Luftgas und Fenster Sensoren. Es kann erkannt werden, dass wenn die CO\textsubscript{2} Konzentration ansteigt, das Fenster jedoch geschlossen ist, das Öffnen des Fensters eine positive Auswirkung auf die Luftqualität erzeugt. Eine kalte Außentemperatur kann jedoch bei zu langem Öffnen des Fensters die Raumtemperatur negativ beeinflussen. Deshalb wird nach erreichen einer akzeptablen CO\textsubscript{2} Konzentration die Empfehlung gegeben, das Fenster wieder zu schließen.
+In dem ``perfekten'' Raum soll die Temperatur, die Luftfeuchtigkeit, das Luftgasgemisch, sowie die Lichtverhältnisse optimal gesetzt werden. Der Nutzer möchte oftmals keinen festen Richtwert setzen, sondern einen Werteverlauf. Zum Beispiel sollte bei der Umgebungsanalyse einer Pflanze kein konstanter Lichteinfluss im Raum sein, sondern ein Wertverlauf nach Zeit.\\
+Eine mobile Schnittstelle lässt den potentielle Besitzer eines ``perfekten'' Raumes ortsunabhängig das zu beobachtende Objekt an sich und seine Umgebung immer im Blick zu haben und bei Unregelmäßigkeiten benachrichtigt zu werden.
 
-Ein Zusammenspiel unterschiedlicher Sensoren kann in vielen Anwendungsbereichen eine positive Auswirkung auf die Lebensqualität oder auf die Sicherheit der Bewohner bewirken.
 
 \section{Ziel}
-Das Ziel ist eine Anwendung zu entwerfen, die dazu dient einen Raum nach definierten Regeln zu überwachen, um eine perfekte Umgebung für den Anwender zu erschaffen. Dem Benutzer soll durch die Anwendung eine Möglichkeit gegeben werden sein eigenes Wohlbefinden im Raum zu steigern bzw. zu beeinflussen. \\Deshalb ist es notwendig, dass der Benutzer selbstständig verschiedene Grenzwerte zum Überwachen in der Anwendung festlegen kann. Sobald sich Abweichungen ergeben, bekommt der Nutzer über Benachrichtigungen mögliche, von der Anwendung ermittelte, Handlungsschritte mitgeteilt.\\
-Durch die Raumüberwachung ist es notwendig, dass verschiedene Sensoren eingesetzt werden und mögliche Zusammenhänge von Sensorwerten erarbeitet werden.
-
-Ziel dieser Arbeit ist es eine mögliche Lösung zu erarbeiten, die Werte aus verschieden Sensoren ermittelt, um daraus Verknüpfungen herzustellen. Die Sensordaten sollen übergreifend in Relation gesetzt werden. Durch mögliche Abhängigkeiten können Nutzern Handlungsempfehlungen zur Verfügung gestellt werden.
-
-Es soll eine Android-App entwickelt werden, die Werte von verschiedenen Sensoren anzeigt und Empfehlungen ausgibt. Außerdem sollen vom Benutzer Grenzwerte selbstständig festgelegt werden können und diesen benachrichtigen, falls der entsprechende Wert unter- oder überschritten wird. 
+Das Ziel dieser Arbeit ist es, durch eine methodische Vorgehensweise einen ``perfekten'' Raum zu schaffen. Der Raum wird dafür als ein regelbasiertes System betrachtet, das die optimale Umgebung für den Inhalt des Raumes bilden wird.\\Dem Nutzer soll eine mobile Schnittstelle zur Verfügung gestellt werden, die ihm dabei hilft, eine visuelle, aber auch eine sensorbasierte Kontrollinstanz für den Raum aufzubauen. Neben der Möglichkeit den Raum zu überprüfen, soll dem Nutzer gleichzeitig aus den erhalteten Sensordaten konkrete Verbesserungsvorschläge gemacht werden.\\
+Somit können die Nutzer, auf dieser Benutzerschnittstelle aufbauend, eine effizientere Raumkontrolle und Verbesserung der Umgebung aufsetzen.
+Außerdem sollen vom Benutzer Grenzwerte oder ein Werteverlauf selbstständig festgelegt werden können. Der Nutzer wird benachrichtigt, falls der entsprechende Wert sich nicht mehr im Tolleranzbereich befindet. 
 Folgende Aufgaben soll die App dabei abdecken:
 \begin{itemize}
 	\item Anzeige eines Live-Bild einer Kamera
 	\item Anzeige der aktuellen Temperatur
 	\item Anzeige der aktuellen Luftfeuchtigkeit
-	\item Anzeige eines Verlaufs der Temperatur bzw. Luftfeuchtigkeit
-	\item Anzeige eines Status, ob ein Fester geöffnet oder geschlossen ist
+	\item Anzeige eines Status, ob ein Fester/Tür geöffnet oder geschlossen ist
+	\item Anzeige eines Verlaufs der oben genannten Sensordaten
 \end{itemize} 
-Die verschiedenen Sensoren werden an einem Raspberry Pi angeschlossen und deren Werte in Datenbanktabellen erfasst. Diese ermittelten Werte der Sensoren sollen anschließend über einen Webserver von der App aufgerufen werden können.
-
+Die verschiedenen Sensoren werden an einem Raspberry Pi angeschlossen und deren Werte zentral erfasst. Diese ermittelten Werte der Sensoren sollen anschließend über eine Schnittstelle von der App aufgerufen werden können. 
+\\
 Des Weiteren soll ein Ausblick auf eine mögliche Erweiterung gegeben werden, wie sich Vorhersagen, auf Basis der bestehenden Daten, zu einzelnen Sensor bestimmen lassen und der Benutzer dadurch profitieren kann. So kann beispielsweise im Fall der Luftqualität schon im Vorhinein auf Basis alter Daten eine Verschlechterung erkannt werden, sodass Gegenmaßnahmen frühzeitig getroffen werden können.
 \section{Struktur der Arbeit}
-Um das Ziel dieser Arbeit zu erreichen, wird die Arbeit in drei Phasen aufgeteilt. In der ersten Phase wird ermittelt mit welchen Technologien und Lösungen die verschiedenen Sensoren angesprochen und ausgelesen werden können. Anschließend wird eine Benutzerschnittstelle entwickelt, um die relevanten Werte zu präsentieren. Der Fokus liegt in dieser Phase allein, in der Datenbeschaffung und Datenverwaltung. Um in den nächsten Phasen mit den Daten arbeiten zu können, müssen diese zentral gespeichert werden.
+- Aufsetzen des Pi's
+- Ansprechen und Auslesen der Sensoren
+- Speicherung der Daten
 
-In der zweiten Phase sollen Zusammenhänge zwischen den erhaltenen Daten der Sensoren erkannt werden. Basierend aus den Zusammenhängen, werden Regeln definiert, die dem Bewohner ermöglichen gewünschte Zielwerte zu erreichen. Je nach Sensor und seiner Funktionalität, wird ermittelt inwiefern eine Abhängigkeit zu anderen Sensorwerten besteht. Der Kern dieser Phase liegt in der Definition der Regeln und Korrelation der Daten.
-
-Aufbauend auf die vorausgehenden Phasen wird in der dritten Phase untersucht, inwiefern einzelne Sensordaten vorhergesagt werden können. Durch das Vorhersagen von Daten können Maßnahmen vom Nutzer präziser und effizienter getroffen werden. Diese Phase wird theoretisch innerhalb dieser Arbeit behandelt. Es ist nicht vorgesehen, diese auch praktisch umzusetzen.
+Zuerst ist eine Einarbeitung in die Thematik der regelbasierten Systeme, der Sensortechnik und der Nutzung eines Raspberry Pis notwendig. Darauf aufbauend werden die Anforderungen an das zu erstellende System erhoben. Um sinnvolle Anforderungen aufstellen zu können, muss definiert werden, was ein ``perfekter'' Raum ist und dessen Vorteile. Da ein solcher Raum je nach Verwendungszweck des Raumes stark abweichen kann, wird diese Arbeit erstellt am Beispiel ...... Anschließend wird ein übergreifender Anforderungskatalog erstellt. Mit Hilfe des Anforderungskataloges werden anschließend Technologien und Vorgehensweisen zur Erfüllung der Anforderungen verglichen und bewertet.\\
+Bei der Auswahl der einzelnen Komponenten um das Ziel dieser Arbeit zu erreichen, wird als Grundlage festgesetzt eine mobile Applikation des Betriebssystemes Android zu erstellen. Auf dadurch entstehende Einschränkungen und Auswirkungen auf die Gesamtarchitektur wird durchgehend gesondert geachtet. 	
