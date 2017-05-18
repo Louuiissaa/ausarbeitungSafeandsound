@@ -1,4 +1,28 @@
 \chapter{Analyse}
+Um die Anforderungen für diese Studienarbeit aufstellen zu können, muss eine Analysephase basierend auf die Motivation durchgeführt werden. In der Analysephase werden relevante Anforderungen an das innerhalb dieser Arbeit erarbeitende System evaluiert.
 \section{Analysephase}
+Basierend auf die Motivation wird analysiert, welche Parameter die Qualität eines Raumes beeinflussen. Neben der reinen Beeinflussung der Raumqualität, müssen die Parameter zudem untersucht werden auf die Sinnhaftigkeit einer Kontrolle der Werte und einer Messbarkeit der Werte.\\
+Die Innenraumklimatologie beschäftigt sich mit den Einflussfaktoren auf das Innenraumklima. Dabei werden chemische, biologische, wie auch physikalische Faktoren betrachtet. Ziel der Innenraumklimatologie ist es ein optimales Wohn- und Arbeitsumfeld im Innenbereich zu ermöglichen \cite{raumluft:Innenraumklimatologie}. Bei einer optimalen Umgebung wird nachweislich die Behaglichkeit gesteigert, sowie die Leistungsfähigkeit \cite{Raumklimatechnik}. Schlechte Raumluft kann zudem gesundheitliche Beeinträchtigungen hervorrufen \cite{raumluft:InnenluftqualitätundGesundheit}. Beeinflussende Parameter müssen für eine sinnvolle Raumanalyse in ihrer Gesamtheit betrachtet werden.\\
+Innerhalb dieser Arbeit wurden als repräsentative Parameter für das Raumklima Temperatur, Luftfeuchtigkeit, Kohlenstoffdioxid (kurz CO\textsubscript{2}) und Kohlenstoffmonoxid (kurz CO) ausgewählt. Diese Werte bilden eine Grundlage für eine generelle Raumüberprüfung. Es wurde sich auf diese fünf Werte beschränkt um eine allgemeine umfassende Raumkontrolle zu bewerkstelligen. Schadstoffe in der Raumluft können sehr stark von Wohngebiet und verwendete Materialien abweichen. Bei einem genaueren Verdacht auf einen Schadstoff müssen die verwendeten Sensoren entsprechend angepasst werden.\\
+Neben der Erfassung von den repräsentativen Parametern für das Raumklima sollten noch repräsentative Aktionen in die spätere Auswertung mit einfließen. Es muss erkannt werden, ob und wie lange eine Luftzufuhr durch Fenster oder Türen öffnen stattgefunden hat. Auch Menschen, die sich in einem Raum aufhalten, beeinflussen ihre Umgebung. So trägt der Mensch zum einen zu einer Veränderung der Luftfeuchtigkeit bei, durch die Atmung und die Feuchteabgabe durch die Haut). Zum anderen gibt ein Mensch Gase, wie CO\textsubscript{2} oder andere Schadstoffe, an seine Umgebung ab \cite{raumluft:Luftmengen}. Es sollte aus diesen Gründen erkannt werden, ob sich ein Mensch gerade im Raum aufhält und dadurch diesen beeinflusst.\\
 \section{Anforderungen}
+Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an das System gestellt. Die Anforderungen wurden in funktionale und nicht-funktionale Anforderungen unterteilt. Als Kernaufgabe des Systems steht die Verknüpfung von Sensoren mit Akteuren. Dafür ist eine Erfassung und Kontrolle der Sensordaten, sowie die anschließende Verarbeitung der Daten um Akteuren Handlungsaufforderungen mitzuteilen, notwendig. Dem späteren Anwender soll das System eine möglichst optimale Unterstützung bei der Kontrolle der Raumbedingungen ermöglichen. Die Anforderungen wurden in drei verschiedene Kategorien aufgeteilt: 1 - Must haves, 2 - Should Haves und 3 - Could Haves. Die Einteilung in diese Kategorien ist für die Umsetzung hilfreich. In der Tabelle NUMMER sind die Anforderungen WELCHEANFORDERUNGEN aufgezeigt. Eine detailliertere Auflistung aller Anforderungen mit Beschreibung sind dem Anhang zu entnehmen.\\
+
+TABELLE
+
+\textbf{1 - Must Haves}
+Die Anforderungen mit der Priorität 1 sind für die Software elementar und sollten vollständig umgesetzt werden. 
+Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle und Sensoren entworfen werden (F10). Aus der Analysephase hat sich der Bedarf nach Sensoren für folgende Werte ergeben.
+\begin{itemize}
+\item Luftfeuchtigkeit
+\item Temperatur
+\item Bewegung
+\item Livestream
+\item CO\textsubscript{2}
+\item CO
+\item Fenster/Türen Status
+\end{itemize}
+Es müssen passende Sensoren evaluiert werden, um anschließend die Daten auslesen zu können (F20).\\
+Aufbauend auf die erfassten Daten soll der Nutzer Regeln erstellen können (F30). Die Regeln dienen als Verknüpfung zwischen den Sensoren und den Akteuren. Je nach einkommenden Daten, soll erkannt werden, ob eine Aktion notwendig ist und wenn ja, welche Aktion von welchem Akteur ausgeführt werden muss.
+Für eine spätere Anwendung der Software muss ein mobiles Frontend entwickelt werden. Das Frontend ermöglicht dem Nutzer ortsunabhängig auf die Daten zuzugreifen, die Regeln zu verwalten und Benachrichtigungen zu erhalten.\\
 \section{Konzept}
