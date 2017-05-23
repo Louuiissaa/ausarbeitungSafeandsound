@@ -6,7 +6,7 @@ Die Innenraumklimatologie beschäftigt sich mit den Einflussfaktoren auf das Inn
 Innerhalb dieser Arbeit wurden als repräsentative Parameter für das Raumklima Temperatur, Luftfeuchtigkeit, Kohlenstoffdioxid (kurz CO\textsubscript{2}) und Kohlenstoffmonoxid (kurz CO) ausgewählt. Diese Werte bilden eine Grundlage für eine generelle Raumüberprüfung. Es wurde sich auf diese fünf Werte beschränkt um eine allgemeine umfassende Raumkontrolle zu bewerkstelligen. Schadstoffe in der Raumluft können sehr stark von Wohngebiet und verwendete Materialien abweichen. Bei einem genaueren Verdacht auf einen Schadstoff müssen die verwendeten Sensoren entsprechend angepasst werden.\\
 Neben der Erfassung von den repräsentativen Parametern für das Raumklima sollten noch repräsentative Aktionen in die spätere Auswertung mit einfließen. Es muss erkannt werden, ob und wie lange eine Luftzufuhr durch Fenster oder Türen öffnen stattgefunden hat. Auch Menschen, die sich in einem Raum aufhalten, beeinflussen ihre Umgebung. So trägt der Mensch zum einen zu einer Veränderung der Luftfeuchtigkeit bei, durch die Atmung und die Feuchteabgabe durch die Haut). Zum anderen gibt ein Mensch Gase, wie CO\textsubscript{2} oder andere Schadstoffe, an seine Umgebung ab \cite{raumluft:Luftmengen}. Es sollte aus diesen Gründen erkannt werden, ob sich ein Mensch gerade im Raum aufhält und dadurch diesen beeinflusst.\\
 \section{Anforderungen}
-Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an das System gestellt. Die Anforderungen wurden in funktionale und nicht-funktionale Anforderungen unterteilt. Als Kernaufgabe des Systems steht die Verknüpfung von Sensoren mit Akteuren. Dafür ist eine Erfassung und Kontrolle der Sensordaten, sowie die anschließende Verarbeitung der Daten um Akteuren Handlungsaufforderungen mitzuteilen, notwendig. Dem späteren Anwender soll das System eine möglichst optimale Unterstützung bei der Kontrolle der Raumbedingungen ermöglichen. Die Anforderungen wurden in drei verschiedene Kategorien aufgeteilt: 1 - Must haves, 2 - Should Haves und 3 - Could Haves. Die Einteilung in diese Kategorien ist für die Umsetzung hilfreich. In der Tabelle NUMMER sind die Anforderungen WELCHEANFORDERUNGEN aufgezeigt. Eine detailliertere Auflistung aller Anforderungen mit Beschreibung sind dem Anhang zu entnehmen.\\
+Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an das System gestellt. Die Anforderungen wurden in funktionale und nicht-funktionale Anforderungen unterteilt. Als Kernaufgabe des Systems steht die Verknüpfung von Sensoren mit Akteuren. Dafür ist eine Erfassung und Kontrolle der Sensordaten, sowie die anschließende Verarbeitung der Daten um Akteuren Handlungsaufforderungen mitzuteilen, notwendig. Dem späteren Anwender soll das System eine möglichst optimale Unterstützung bei der Kontrolle der Raumbedingungen ermöglichen. Die Anforderungen wurden in drei verschiedene Kategorien aufgeteilt: 1 - Must haves, 2 - Should Haves und 3 - Could Haves. Die Einteilung in diese Kategorien ist für die Umsetzung hilfreich. In der Tabelle \ref{tab:anforderungen} sind die Anforderungen aufgezeigt. Eine detailliertere Auflistung aller Anforderungen mit Beschreibung sind dem Anhang zu entnehmen.\\
 
 \begin{tabularx}{\textwidth}{|l|X|X|l|l|}
     \toprule
@@ -15,11 +15,12 @@ Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an da
     \endhead
     \hline
     \caption{Anforderungen}
+    \label{tab:anforderungen}
     \endfoot
     \multicolumn{5}{|l|}{F-00 Allgemein}\\
     \hline
     F-00.1 & Raspberry Pi & Eine Komponente des Systems ist ein Raspberry Pi. & 1 & \\
-    F-00.2 &Grafische Benutzerschnittstelle & Das System stellt eine grafische Benutzerstelle bereit. & 1 & \\
+    F-00.2 & Grafische Benutzerschnittstelle & Das System stellt eine grafische Benutzerstelle bereit. & 1 & \\
     F-00.3 & Sensoren & Es werden Sensoren zur Datenerfassung genutzt. & 1 & \\
     F-00.4 & Akteure & Es werden Akteure an das System angeschlossen. & 3 & \\
     \hline
@@ -36,45 +37,51 @@ Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an da
     F-10.4.3 & Weitere Gase & Erweiterung durch weitere Gase. & 3 & F-00.5\\
     F-10.5 & Tür-/Fensterstatus & Es kann der Status von Türen und Fenstern über einen Sensor erfasst werden.  & 1 & F-00.5\\
     \hline
-    \multicolumn{5}{|l|}{F-20 Regel definieren}\\
+    \multicolumn{5}{|l|}{F-20 Grafische Benutzerschnittstelle}\\
     \hline
-    F-20.1 & Grenzwerte & Es können Grenzwerte für die erfassten Daten definiert werden. & 1 & \\
-    F-20.1.1 & Luftfeuchtigkeit & Ein Eintrag kann bearbeitet werden. & 1 & F-10.2\\
-    F-20.1.2 & Temperatur & Komponenten können hinzugefügt, editiert und entfernt werden. & 1 & F-10.3\\
-    F-20.1.3 & CO\textsubscript{2}& Einträge anderer Benutzer können in die eigenen Einträge übernommen werden. & 1 & F-10.4.1\\
-    F-20.1.4 & CO & Ein Eintrag kann mit anderen Benutzern geteilt werden. & 1 & F-10.4.2\\
-    F-20.1.5 & Weitere Gase & Einem Eintrag können mehrere Tags zugewiesen werden, die als Kategorien fungieren. & 1 & F-10.4.3\\
-    F-20.2 & Bewegung & Es können gwünschte Häufigkeiten von Bewegungen oder gewünschte Zeitintervalle zwischen zwei Bewegungen definiert werden. & 1 & F-10.1.2\\
-    F-20.3 & Fenster-/Türenstatus & Es können gwünschte Häufigkeiten von Statusänderungen oder gewünschte Zeitintervalle zwischen zwei Statusänderungen definiert werden. & 1 & F-10.5\\
-    F-20.4 & Abhängigkeiten & Es können Abhängigkeiten zwischen erfassten Daten definiert werden. & 2 & \\
-
+    F-10.1   & Datenanzeige & Die grafische Benutzerschnittstelle wird die erfassten Daten anzeigen. & 1 & F-10\\
+    F-10.1.1 & Aktuelle Daten & Es werden die aktuellen Sensordaten dem Nutzer angezeigt. & 1 & \\
+    F-10.1.2 & Historische Daten & Es werden historische Datensätze aus den Sensordaten grafisch dem Nutzer angezeigt. & 1 & \\
     \hline
-    \multicolumn{5}{|l|}{F-30 Aktionen auslösen}\\
+    \multicolumn{5}{|l|}{F-30 Regelbasierte Steuerung}\\
     \hline
-    F-30.1 & Benachrichtigungen & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen. & 1 & \\
-    F-30.1.1 & Zustandsänderungen & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen bei Zustandsänderungen. & 2 & \\
-    F-30.1.2 & Grenzwert unter- bzw. überschritten & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen bei Grenzwert Unter- bzw. Überschreitungen. & 1 & \\
-    F-30.2 & Akteure & Es werden direkt bei integrierten Akteuren Aktionen ausgelöst. & 3 & \\
+    F-30.1 & Regeln definieren & Der Benutzer kann eigene Regeln zur Laufzeit definieren. & 1 & \\
+    F-30.2 & Grenzwerte & Es können Grenzwerte für die erfassten Daten definiert werden. & 1 & \\
+    F-30.2.1 & Luftfeuchtigkeit & Ein Eintrag kann bearbeitet werden. & 1 & F-10.2\\
+    F-30.2.2 & Temperatur & Komponenten können hinzugefügt, editiert und entfernt werden. & 1 & F-10.3\\
+    F-30.2.3 & CO\textsubscript{2}& Einträge anderer Benutzer können in die eigenen Einträge übernommen werden. & 1 & F-10.4.1\\
+    F-30.2.4 & CO & Ein Eintrag kann mit anderen Benutzern geteilt werden. & 1 & F-10.4.2\\
+    F-30.2.5 & Weitere Gase & Einem Eintrag können mehrere Tags zugewiesen werden, die als Kategorien fungieren. & 1 & F-10.4.3\\
+    F-30.3 & Bewegung & Es können gwünschte Häufigkeiten von Bewegungen oder gewünschte Zeitintervalle zwischen zwei Bewegungen definiert werden. & 1 & F-10.1.2\\
+    F-30.4 & Fenster-/Türenstatus & Es können gwünschte Häufigkeiten von Statusänderungen oder gewünschte Zeitintervalle zwischen zwei Statusänderungen definiert werden. & 1 & F-10.5\\
+    F-30.5 & Abhängigkeiten & Es können Abhängigkeiten zwischen erfassten Daten definiert werden. & 2 & \\
     \hline
-    \multicolumn{5}{|l|}{F-40 Prognose}\\
+    \multicolumn{5}{|l|}{F-40 Aktionen auslösen}\\
     \hline
-    F-40.1 & Abhängigkeiten zwischen Datensätzen erkennen & Einträge können durchsucht werden. & 1 &\\
-    F-40.1.1 & Prognosen berechnen & Es werden sowohl die Informationen in den Komponenten der Einträge als auch die angehängten Dokumente durchsucht. & 2 & \\
-    F-40.1.2 & Grenzwert unter- bzw. überschritten & Es können Schlüsselwörter als Suchkriterium verwendet werden. & 1 &\\
-    F-40.2 & Anbindung an Akteure & Es können Tags als Suchkriterium verwendet werden. & 1 & F-20.6\\
+    F-40.1 & Benachrichtigungen & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen. & 1 & \\
+    F-40.1.1 & Zustandsänderungen & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen bei Zustandsänderungen. & 2 & \\
+    F-40.1.2 & Grenzwert unter- bzw. überschritten & Der Nutzer bekommt über die grafische Benutzeroberfläche Push-Up Benachrichtigungen bei Grenzwert Unter- bzw. Überschreitungen. & 1 & \\
+    F-40.2 & Akteure & Es werden direkt bei integrierten Akteuren Aktionen ausgelöst. & 3 & \\
     \hline
-    \multicolumn{5}{|l|}{F-50 Nutzerprofil anlegen}\\
+    \multicolumn{5}{|l|}{F-50 Prognose}\\
     \hline
-    F-50.1 & Profil anlegen & Es können Benutzer anglegt werden. & 2 & \\
-    F-50.2 & Profil anzeigen & Es kann ein Benutzerprofil angezeigt werden. & 2 & \\
-    F-50.3 & Profil bearbeiten & Es kann ein Benutzerprofil bearbeitet werden. & 2 & \\
+    F-50.1 & Abhängigkeiten zwischen Datensätzen erkennen & Einträge können durchsucht werden. & 1 &\\
+    F-50.1.1 & Prognosen berechnen & Es werden sowohl die Informationen in den Komponenten der Einträge als auch die angehängten Dokumente durchsucht. & 2 & \\
+    F-50.1.2 & Grenzwert unter- bzw. überschritten & Es können Schlüsselwörter als Suchkriterium verwendet werden. & 1 &\\
+    F-50.2 & Anbindung an Akteure & Es können Tags als Suchkriterium verwendet werden. & 1 & F-20.6\\
+    \hline
+    \multicolumn{5}{|l|}{F-60 Nutzerprofil anlegen}\\
+    \hline
+    F-60.1 & Profil anlegen & Es können Benutzer anglegt werden. & 2 & \\
+    F-60.2 & Profil anzeigen & Es kann ein Benutzerprofil angezeigt werden. & 2 & \\
+    F-60.3 & Profil bearbeiten & Es kann ein Benutzerprofil bearbeitet werden. & 2 & \\
     \bottomrule
 
 \end{tabularx}
 
 \textbf{1 - Must Haves}
 Die Anforderungen mit der Priorität 1 sind für die Software elementar und sollten vollständig umgesetzt werden. 
-Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle und Sensoren entworfen werden (F10). Aus der Analysephase hat sich der Bedarf nach Sensoren für folgende Werte ergeben.
+Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle und Sensoren entworfen werden (F-00). Aus der Analysephase hat sich der Bedarf nach Sensoren für folgende Werte ergeben.
 \begin{itemize}
 \item Luftfeuchtigkeit
 \item Temperatur
@@ -84,23 +91,35 @@ Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle un
 \item CO
 \item Fenster/Türen Status
 \end{itemize}
-Es müssen passende Sensoren evaluiert werden, um anschließend die Daten auslesen zu können (F20).\\
-Aufbauend auf die erfassten Daten soll der Nutzer Regeln erstellen können (F30). Die Regeln dienen als Verknüpfung zwischen den Sensoren und den Akteuren. Je nach einkommenden Daten, soll erkannt werden, ob eine Aktion notwendig ist und wenn ja, welche Aktion von welchem Akteur ausgeführt werden muss.\\
+Es müssen passende Sensoren evaluiert werden, um anschließend die Daten auslesen zu können (F-10).\\
+Aufbauend auf die erfassten Daten soll der Nutzer Regeln erstellen können (F-30.1). Die Regeln dienen als Verknüpfung zwischen den Sensoren und den Akteuren. Je nach einkommenden Daten, soll erkannt werden, ob eine Aktion notwendig ist und wenn ja, welche Aktion von welchem Akteur ausgeführt werden muss.\\
 Für eine spätere Anwendung der Software muss ein mobiles Frontend entwickelt werden. Das Frontend ermöglicht dem Nutzer ortsunabhängig auf die Daten zuzugreifen, die Regeln zu verwalten und Benachrichtigungen zu erhalten.\\
 \textbf{2 - Should Haves}
 Die Anforderungen der Priorität 2 sind nicht essentiell für die Erarbeitung dieser Arbeit, aber bringen wünschenswerte Funktionalitäten.\\
-Dazu gehört die Erweiterung der Regeln um die Abbildung von Abhängigkeiten zwischen Datentypen (F30.2). Neben der manuellen Eingabe von Abhängigkeiten, sollen Abhängigkeiten zwischen Datentypen aufbauend auf Datensätzen von dem System selbst erkannt werden (F50.1). Diese Abhängigkeiten werden dem Nutzer, dann auf der Benutzerschnittstelle angezeigt.\\
-Des Weiteren soll ein Nutzerprofil vom Nutzer angelegt werden können (F60). Vor allem für eine weitreichende Anwendung des Systems ist es wichtig die Daten zum einen vor Dritten zu schützen und zum anderen die Datenzugehörigkeit zu den Nutzern zu differenzieren.\\
+Dazu gehört die Erweiterung der Regeln um die Abbildung von Abhängigkeiten zwischen Datentypen (F-30.5). Neben der manuellen Eingabe von Abhängigkeiten, sollen Abhängigkeiten zwischen Datentypen aufbauend auf Datensätzen von dem System selbst erkannt werden (F-50.1). Diese Abhängigkeiten werden dem Nutzer, dann auf der Benutzerschnittstelle angezeigt.\\
+Des Weiteren soll ein Nutzerprofil vom Nutzer angelegt werden können (F-60.1). Vor allem für eine weitreichende Anwendung des Systems ist es wichtig die Daten zum einen vor Dritten zu schützen und zum anderen die Datenzugehörigkeit zu den Nutzern zu differenzieren.\\
 \textbf{3 – Could Haves}
 Die Priorisierung 3 gibt Ideen für mögliche Erweiterungen oder eine Verbesserungen des Systems. Die einzelnen Anforderungen werden bei der Implementierung der restlichen Anforderung beachtet, um eine mögliche spätere Implementierung zu vereinfachen.\\
-Eine Anforderung mit der Priorität 3 ist die Anbindung weiterer Sensoren an das System (F20.4.3). Aufbauend auf die weiteren Sensoren ergeben sich neue Regeln und Regelkombinationen, die erstellt werden können.\\
-Des Weiteren können Akteure direkt an das System angebunden werden, um automatisiert auf Werte der Sensoren reagieren zu können (F40.2). Das führt zum einen zu einer effizienteren Steuerung, aber auch zu einer effektiveren, weil gezielt die relevanten Akteure angesprochen werden können.\\
-Als weitere Funktion kann die Prognose von Datenwerten hinzugefügt werden (F50.2). Eine Prognose der Daten bringt zwei Vorteile mit sich. Zum einen kann schon im Vorhinein erkannt werden, dass ein Eingreifen notwendig sein wird. Zum anderen können die prognostizierten Daten als Ausfallsicherung genutzt werden. Falls ein Sensor ausfällt, werden die prognostizierten Werte genutzt um Ratschläge geben zu können.\\
+Eine Anforderung mit der Priorität 3 ist die Anbindung weiterer Sensoren an das System (F-10.4.3). Aufbauend auf die weiteren Sensoren ergeben sich neue Regeln und Regelkombinationen, die erstellt werden können.\\
+Des Weiteren können Akteure direkt an das System angebunden werden, um automatisiert auf Werte der Sensoren reagieren zu können (F-40.2). Das führt zum einen zu einer effizienteren Steuerung, aber auch zu einer effektiveren, weil gezielt die relevanten Akteure angesprochen werden können.\\
+Als weitere Funktion kann die Prognose von Datenwerten hinzugefügt werden (F-50.2). Eine Prognose der Daten bringt zwei Vorteile mit sich. Zum einen kann schon im Vorhinein erkannt werden, dass ein Eingreifen notwendig sein wird. Zum anderen können die prognostizierten Daten als Ausfallsicherung genutzt werden. Falls ein Sensor ausfällt, werden die prognostizierten Werte genutzt um Ratschläge geben zu können.\\
 Konzept
 Um die Daten aus den relevanten Sensoren einsehen und speichern zu können muss auf diese zugegriffen werden können. Alle angeschlossenen Sensoren sollen einheitlich über einen Sensor Adapter eingelesen werden.
 
 \section{Konzept}
-Um die Daten aus den relevanten Sensoren einsehen und speichern zu können muss auf diese zugegriffen werden können. Alle angeschlossenen Sensoren sollen einheitlich über einen Sensor Adapter eingelesen werden.
+Um die Daten aus den relevanten Sensoren einsehen und speichern zu können muss auf diese zugegriffen werden können. Alle angeschlossenen Sensoren sollen einheitlich über einen Sensor Adapter eingelesen werden.\\
+Aus der Anforderung F-00 ergeben sich folgende Komponenten für die Umsetzung:
+\begin{itemize}
+\item Sensoren
+\item Raspberry Pi
+\item Grafische Benutzerschnittstelle
+\item Akteure
+\end{itemize}
+Innerhalb dieses Kapitels wird die Verknüpfung der einzelnen Komponenten erläutert. Wie die einzelnen Komponenten im Einzelnen umgesetzt werden, wird im Kapitel \ref{sec:Umsetzung} näher drauf eingegangen.\\
+Die Sensoren müssen sinnvoll an den Raspberry Pi angeschlossen werden, sodass dieser die Daten auslesen kann. Ein Sensor Adapter soll ermöglichen, eine einheitliche Schnittstelle für die Sensoren mit dem Raspberry Pi zu gewährleisten. Die Kommunikation mit den Sensoren soll ausschließlich mit einer Schnittstelle unterhalten werden. Mit Ausblick auf die individuelle Erweiterung des Systems um neue Sensoren, muss ein Framework als Sensor Adapter evaluiert werden oder ein entsprechender Sensor Adapter implementiert werden.\\
+Alle erhaltenen Daten werden nach Auslesen persistent gespeichert. Welches Speichersystem im Genauen genutzt wird, wird in der Architektur evaluiert.\\
+Für die regelbasierte Steuerung muss ein System entwickelt werden, das die Regeln anlegt, verwaltet und ausführt. Hierfür wird ein Regelmodul (im Folgenden Rule Engine) verwendet. Aus dem Grund das Regeln basierend auf aktuellen Werten oder auf Historienwerten definiert werden können, muss die Rule Engine Zugriff haben auf den Sensor Adapter direkt, sowie auf den persistenten Speicher. Die Rule Engine kann entweder im Raspberry Pi direkt oder in der grafischen Schnittstelle integriert werden. Vorteil einer Integration auf dem Raspberry Pi ist die Nähe zu den erhaltenen Sensordaten. Damit ist die Rule Engine mit ihrer Datenverarbeitung \cite{Hayes-Roth:1985:RS:4284.4286}, direkt an die zu bearbeitenden Daten geknüpft. Durch die geforderte Nähe der Rule Engine zum Benutzer (Anforderung F-30.1), bietet sich, statt der Datennähe, die Integration in die Benutzerschnittstelle an. Die Regeln werden vom Anwender definiert und genutzt. Aus diesem Grund müssen die Regeln vom Nutzer auch verstanden werden. Der Raspberry Pi wird als Datenquelle genutzt, sodass aufbauend auf die Daten die Regeln in der App angewendet werden. Der Vorteil dabei ist bei Hinzufügen, Ändern oder Löschen von Regeln geschieht das direkt beim Anwender, sollte der Raspberry Pi nicht erreichbar sein, hat dies keinen Einfluss auf die Regeln. Da sowohl die aktuellen Daten, wie auch die historischen Daten der Benutzerschnittstelle bereitgestellt werden müssen (Anforderung F10.1)
+
 \begin{figure}
   \centering
     \includegraphics{images/Konzept_allgemein.png}
