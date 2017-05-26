@@ -1,6 +1,6 @@
-\chapter{Analyse}
+\chapter{Analyse} %Louisa
 Um die Anforderungen für diese Studienarbeit aufstellen zu können, muss eine Analysephase basierend auf die Motivation durchgeführt werden. In der Analysephase werden relevante Anforderungen an das innerhalb dieser Arbeit erarbeitende System evaluiert.
-\section{Analysephase}
+\section{Analysephase} \label{sec:Anforderungen}
 Basierend auf die Motivation wird analysiert, welche Parameter die Qualität eines Raumes beeinflussen. Neben der reinen Beeinflussung der Raumqualität, müssen die Parameter zudem untersucht werden auf die Sinnhaftigkeit einer Kontrolle der Werte und einer Messbarkeit der Werte.\\
 Die Innenraumklimatologie beschäftigt sich mit den Einflussfaktoren auf das Innenraumklima. Dabei werden chemische, biologische, wie auch physikalische Faktoren betrachtet. Ziel der Innenraumklimatologie ist es ein optimales Wohn- und Arbeitsumfeld im Innenbereich zu ermöglichen \cite{raumluft:Innenraumklimatologie}. Bei einer optimalen Umgebung wird nachweislich die Behaglichkeit gesteigert, sowie die Leistungsfähigkeit \cite{Raumklimatechnik}. Schlechte Raumluft kann zudem gesundheitliche Beeinträchtigungen hervorrufen \cite{raumluft:InnenluftqualitaetundGesundheit}. Beeinflussende Parameter müssen für eine sinnvolle Raumanalyse in ihrer Gesamtheit betrachtet werden.\\
 Innerhalb dieser Arbeit wurden als repräsentative Parameter für das Raumklima Temperatur, Luftfeuchtigkeit, Kohlenstoffdioxid (kurz CO\textsubscript{2}) und Kohlenstoffmonoxid (kurz CO) ausgewählt. Diese Werte bilden eine Grundlage für eine generelle Raumüberprüfung. Es wurde sich auf diese fünf Werte beschränkt um eine allgemeine umfassende Raumkontrolle zu bewerkstelligen. Schadstoffe in der Raumluft können sehr stark von Wohngebiet und verwendete Materialien abweichen. Bei einem genaueren Verdacht auf einen Schadstoff müssen die verwendeten Sensoren entsprechend angepasst werden.\\
@@ -36,25 +36,23 @@ Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an da
     F-10.4.2 & Kohlenstoffmonoxid & Es kann der Kohlenstoffmonoxid Wert über einen Sensor erfasst werden. & 1 & F-00.5\\
     F-10.4.3 & Weitere Gase & Erweiterung durch weitere Gase. & 3 & F-00.5\\
     F-10.5 & Tür-/Fensterstatus & Es kann der Status von Türen und Fenstern über einen Sensor erfasst werden.  & 1 & F-00.5\\
+    F-10.6 & Kontextdaten & Es können Daten aus dem Kontext erfasst werden (z.B. Uhrzeit, Außentemperatur über Standort, etc.). & 2 & \\  
     \hline
     \multicolumn{5}{|l|}{F-20 Grafische Benutzerschnittstelle}\\
     \hline
-    F-10.1   & Datenanzeige & Die grafische Benutzerschnittstelle wird die erfassten Daten anzeigen. & 1 & F-10\\
-    F-10.1.1 & Aktuelle Daten & Es werden die aktuellen Sensordaten dem Nutzer angezeigt. & 1 & \\
-    F-10.1.2 & Historische Daten & Es werden historische Datensätze aus den Sensordaten grafisch dem Nutzer angezeigt. & 1 & \\
+    F-20.1   & Datenanzeige & Die grafische Benutzerschnittstelle wird die erfassten Daten anzeigen. & 1 & F-10\\
+    F-20.1.1 & Aktuelle Daten & Es werden die aktuellen Sensordaten dem Nutzer angezeigt. & 1 & \\
+    F-20.1.2 & Historische Daten & Es werden historische Datensätze aus den Sensordaten grafisch dem Nutzer angezeigt. & 1 & \\
+    F-20.2 & Ortsunabhängigkeit & Die grafische Benutzerschnittstelle soll ortsunabhängig von dem Benutzer zugänglich sein. & 1 & \\
     \hline
     \multicolumn{5}{|l|}{F-30 Regelbasierte Steuerung}\\
     \hline
-    F-30.1 & Regeln definieren & Der Benutzer kann eigene Regeln zur Laufzeit definieren. & 1 & \\
-    F-30.2 & Grenzwerte & Es können Grenzwerte für die erfassten Daten definiert werden. & 1 & \\
-    F-30.2.1 & Luftfeuchtigkeit & Ein Eintrag kann bearbeitet werden. & 1 & F-10.2\\
-    F-30.2.2 & Temperatur & Komponenten können hinzugefügt, editiert und entfernt werden. & 1 & F-10.3\\
-    F-30.2.3 & CO\textsubscript{2}& Einträge anderer Benutzer können in die eigenen Einträge übernommen werden. & 1 & F-10.4.1\\
-    F-30.2.4 & CO & Ein Eintrag kann mit anderen Benutzern geteilt werden. & 1 & F-10.4.2\\
-    F-30.2.5 & Weitere Gase & Einem Eintrag können mehrere Tags zugewiesen werden, die als Kategorien fungieren. & 1 & F-10.4.3\\
-    F-30.3 & Bewegung & Es können gwünschte Häufigkeiten von Bewegungen oder gewünschte Zeitintervalle zwischen zwei Bewegungen definiert werden. & 1 & F-10.1.2\\
-    F-30.4 & Fenster-/Türenstatus & Es können gwünschte Häufigkeiten von Statusänderungen oder gewünschte Zeitintervalle zwischen zwei Statusänderungen definiert werden. & 1 & F-10.5\\
-    F-30.5 & Abhängigkeiten & Es können Abhängigkeiten zwischen erfassten Daten definiert werden. & 2 & \\
+    F-30.1 & Regeln & Das System behinhaltet Regeln & 1 & \\
+    F-30.1.1 & Regeln definieren & Der Benutzer kann eigene Regeln zur Laufzeit definieren. & 1 & \\
+    F-30.1.2 & Regeln löschen & Der Benutzer kann die definierten Regeln zur Laufzeit löschen. & 2 & \\
+    F-30.2 & Werte definieren & Es können Grenzwerte oder Status für die erfassten Daten definiert werden. & 1 & \\
+    F-30.4 & Intervalle definieren & Es können gewünschte Häufigkeiten von Statusänderungen oder gewünschte Zeitintervalle zwischen zwei Statusänderungen definiert werden. & 2 & \\
+    F-30.5 & Abhängigkeiten & Es können Abhängigkeiten zwischen erfassten Daten definiert werden. & 3 & \\
     \hline
     \multicolumn{5}{|l|}{F-40 Aktionen auslösen}\\
     \hline
@@ -79,7 +77,7 @@ Innerhalb dieser Arbeit wurden auf Grundlage der Analyse die Anforderungen an da
 
 \end{tabularx}
 
-\textbf{1 - Must Haves}
+\textbf{1 - Must Haves}\\
 Die Anforderungen mit der Priorität 1 sind für die Software elementar und sollten vollständig umgesetzt werden. 
 Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle und Sensoren entworfen werden (F-00). Aus der Analysephase hat sich der Bedarf nach Sensoren für folgende Werte ergeben.
 \begin{itemize}
@@ -94,11 +92,11 @@ Es muss ein System, bestehend aus Raspberry Pi, mobiler Benutzerschnittstelle un
 Es müssen passende Sensoren evaluiert werden, um anschließend die Daten auslesen zu können (F-10).\\
 Aufbauend auf die erfassten Daten soll der Nutzer Regeln erstellen können (F-30.1). Die Regeln dienen als Verknüpfung zwischen den Sensoren und den Akteuren. Je nach einkommenden Daten, soll erkannt werden, ob eine Aktion notwendig ist und wenn ja, welche Aktion von welchem Akteur ausgeführt werden muss.\\
 Für eine spätere Anwendung der Software muss ein mobiles Frontend entwickelt werden. Das Frontend ermöglicht dem Nutzer ortsunabhängig auf die Daten zuzugreifen, die Regeln zu verwalten und Benachrichtigungen zu erhalten.\\
-\textbf{2 - Should Haves}
+\textbf{2 - Should Haves}\\
 Die Anforderungen der Priorität 2 sind nicht essentiell für die Erarbeitung dieser Arbeit, aber bringen wünschenswerte Funktionalitäten.\\
 Dazu gehört die Erweiterung der Regeln um die Abbildung von Abhängigkeiten zwischen Datentypen (F-30.5). Neben der manuellen Eingabe von Abhängigkeiten, sollen Abhängigkeiten zwischen Datentypen aufbauend auf Datensätzen von dem System selbst erkannt werden (F-50.1). Diese Abhängigkeiten werden dem Nutzer, dann auf der Benutzerschnittstelle angezeigt.\\
 Des Weiteren soll ein Nutzerprofil vom Nutzer angelegt werden können (F-60.1). Vor allem für eine weitreichende Anwendung des Systems ist es wichtig die Daten zum einen vor Dritten zu schützen und zum anderen die Datenzugehörigkeit zu den Nutzern zu differenzieren.\\
-\textbf{3 – Could Haves}
+\textbf{3 – Could Haves}\\
 Die Priorisierung 3 gibt Ideen für mögliche Erweiterungen oder eine Verbesserungen des Systems. Die einzelnen Anforderungen werden bei der Implementierung der restlichen Anforderung beachtet, um eine mögliche spätere Implementierung zu vereinfachen.\\
 Eine Anforderung mit der Priorität 3 ist die Anbindung weiterer Sensoren an das System (F-10.4.3). Aufbauend auf die weiteren Sensoren ergeben sich neue Regeln und Regelkombinationen, die erstellt werden können.\\
 Des Weiteren können Akteure direkt an das System angebunden werden, um automatisiert auf Werte der Sensoren reagieren zu können (F-40.2). Das führt zum einen zu einer effizienteren Steuerung, aber auch zu einer effektiveren, weil gezielt die relevanten Akteure angesprochen werden können.\\
@@ -118,11 +116,13 @@ Aus der Anforderung F-00 ergeben sich folgende Komponenten für die Umsetzung:
 Innerhalb dieses Kapitels wird die Verknüpfung der einzelnen Komponenten erläutert. Wie die einzelnen Komponenten im Einzelnen umgesetzt werden, wird im Kapitel \ref{sec:Umsetzung} näher drauf eingegangen.\\
 Die Sensoren müssen sinnvoll an den Raspberry Pi angeschlossen werden, sodass dieser die Daten auslesen kann. Ein Sensor Adapter soll ermöglichen, eine einheitliche Schnittstelle für die Sensoren mit dem Raspberry Pi zu gewährleisten. Die Kommunikation mit den Sensoren soll ausschließlich mit einer Schnittstelle unterhalten werden. Mit Ausblick auf die individuelle Erweiterung des Systems um neue Sensoren, muss ein Framework als Sensor Adapter evaluiert werden oder ein entsprechender Sensor Adapter implementiert werden.\\
 Alle erhaltenen Daten werden nach Auslesen persistent gespeichert. Welches Speichersystem im Genauen genutzt wird, wird in der Architektur evaluiert.\\
-Für die regelbasierte Steuerung muss ein System entwickelt werden, das die Regeln anlegt, verwaltet und ausführt. Hierfür wird ein Regelmodul (im Folgenden Rule Engine) verwendet. Aus dem Grund das Regeln basierend auf aktuellen Werten oder auf Historienwerten definiert werden können, muss die Rule Engine Zugriff haben auf den Sensor Adapter direkt, sowie auf den persistenten Speicher. Die Rule Engine kann entweder im Raspberry Pi direkt oder in der grafischen Schnittstelle integriert werden. Vorteil einer Integration auf dem Raspberry Pi ist die Nähe zu den erhaltenen Sensordaten. Damit ist die Rule Engine mit ihrer Datenverarbeitung \cite{Hayes-Roth:1985:RS:4284.4286}, direkt an die zu bearbeitenden Daten geknüpft. Durch die geforderte Nähe der Rule Engine zum Benutzer (Anforderung F-30.1), bietet sich, statt der Datennähe, die Integration in die Benutzerschnittstelle an. Die Regeln werden vom Anwender definiert und genutzt. Aus diesem Grund müssen die Regeln vom Nutzer auch verstanden werden. Der Raspberry Pi wird als Datenquelle genutzt, sodass aufbauend auf die Daten die Regeln in der App angewendet werden. Der Vorteil dabei ist bei Hinzufügen, Ändern oder Löschen von Regeln geschieht das direkt beim Anwender, sollte der Raspberry Pi nicht erreichbar sein, hat dies keinen Einfluss auf die Regeln. Da sowohl die aktuellen Daten, wie auch die historischen Daten der Benutzerschnittstelle bereitgestellt werden müssen (Anforderung F10.1)
-
+Für die regelbasierte Steuerung muss ein System entwickelt werden, das die Regeln anlegt, verwaltet und ausführt. Hierfür wird ein Regelmodul (im Folgenden Rule Engine) verwendet. Aus dem Grund das Regeln basierend auf aktuellen Werten oder auf Historienwerten definiert werden können, muss die Rule Engine Zugriff haben auf den Sensor Adapter direkt, sowie auf den persistenten Speicher. Die Rule Engine kann entweder im Raspberry Pi direkt oder in der grafischen Schnittstelle integriert werden. Vorteil einer Integration auf dem Raspberry Pi ist die Nähe zu den erhaltenen Sensordaten.\\
+Damit ist die Rule Engine mit ihrer Datenverarbeitung \cite{Hayes-Roth:1985:RS:4284.4286}, direkt an die zu bearbeitenden Daten geknüpft. Durch die geforderte Nähe der Rule Engine zum Benutzer (Anforderung F-30.1), bietet sich, statt der Datennähe, die Integration in die Benutzerschnittstelle an. Die Regeln werden vom Anwender definiert und genutzt. Aus diesem Grund müssen die Regeln vom Nutzer auch verstanden werden. Der Raspberry Pi wird als Datenquelle genutzt, sodass aufbauend auf die Daten die Regeln in der App angewendet werden. Der Vorteil dabei ist bei Hinzufügen, Ändern oder Löschen von Regeln geschieht das direkt beim Anwender, sollte der Raspberry Pi nicht erreichbar sein, hat dies keinen Einfluss auf die Regeln. Da sowohl die aktuellen Daten, wie auch die historischen Daten der Benutzerschnittstelle bereitgestellt werden müssen (Anforderung F10.1).\\
+In der Abbildung \ref{fig:M1} sind die beschriebenen Komponenten schematisch dargestellt.\\
 \begin{figure}
   \centering
-    \includegraphics{images/Konzept_allgemein.png}
-  \caption{TODO}
+    \includegraphics[width=1\textwidth]{images/Konzept_allgemein.png}
+  \caption{Kontextsicht Soll-Zustand}
   \label{fig:M1}
 \end{figure}
+Aufbauend auf das erstellte Konzept wird die Architektur des Systems entworfen. Im folgenden Kapitel wird auf die einzelnen Komponenten im Genauen eingegangen und wie diese im Kontext dieser Arbeit optimal umgesetzt werden. 
