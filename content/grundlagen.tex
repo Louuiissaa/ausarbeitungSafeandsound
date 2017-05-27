@@ -1,10 +1,38 @@
 \chapter{Grundlagen}
+Im folgenden Abschnitt sollen die Grundlagen, die für diese Arbeit relevant sind näher erläutert werden.
 
-\section{Raspberry Pi}
+\section{Raspberry Pi}%Dominic
+Der Einplatinencomputer ist ein zentrales Konstrukt, um den perfekten Raum zu verwirklichen. Durch das Anschließen von Sensoren können Bedingungen über das Regel-basierte System für den perfekten Raum definiert und überwacht werden. Außerdem lässt sich durch den Anschluss eines Kameramoduls der Raum auf Bewegung prüfen. Das Ziel beim Betreiben eines solches Computers in einem Raum ist, einer Person dabei zu helfen seine Umgebung auf perfekte Eigenschaften zu kontrollieren und überwachen, sodass diese sich in ihrer Umgebung stets wohl fühlt. 
+\\Dazu müssen die verwendet, um die verschiedenen Sensoren, sowie das Kameramodul für die Bewegungserkennung anzuschließen. Außerdem wird der Raspberry Pi als Webserver eingesetzt, um Daten verschiedenen Applikationen bereitzustellen. 
 
-\section{Node Red}
+\subsection{Webserver}
+Um Informationen über das lokale Netzwerk oder gar dem Internet zu teilen ist es notwendig, dass ein Webserver auf dem Raspberry Pi ausgeführt wird. Dieser bildet einen Einstiegspunkt, um Daten anderen Anwendungen bereitzustellen. Außerdem müssen die Sensoren integriert bzw. anfallenden Daten in einer Datenbank gespeichert werden können. Deshalb ergaben sich bei der Auswahl verschiedener Möglichkeiten folgende Kriterien:
+\begin{itemize}
+	\item \textbf{Eventbasierte Engine}: Anfragen von Anwendungen sollen bei Bedarf bearbeitet werden
+	\item \textbf{Erweiterbarkeit}: Hinzufügen neuer serverseitiger Schnittstellen muss gewährleistet sein
+	\item \textbf{Integration/ Zugriff auf Sensoren}: Hinzufügen eines neuen Sensor sollte möglichst einfach sein
+\end{itemize} 
+Die vorangehenden Voraussetzungen deckt die Komponenten Node-Red ab.
+\subsubsection{Node Red}
+Node Red wurde von IBM im Jahre 2013 entwickelt und steht als Open-Source Projekt zur Verfügung\cite{nodeRed:nodeRedAbout}.\\
+Mithilfe von Node Red, das auf Node.js basiert, können Datenflüssen bzw. Flows über eine Benutzerschnittstelle im Browser zum Ausführen vom Server-seitigen Aufgaben angelegt werden. Dabei werden verschiedene Knoten, auch Nodes genannt, miteinander verknüpft. \autoref{img:bspFlow} zeigt beispielhaft ein Flow auf, der aus den Knoten \acf{HTTP} Input, einer Funktion, und dem \ac{HTTP}. Jeder Knoten stellt somit eine spezifische Funktionalität bereit. Der \ac{HTTP} Input Node, definiert den Eintrittspunkt bzw. den relativen Pfad, an den \ac{HTTP} Anfragen vom Client gesendet werden. Als Ergebnis liefert der angelegte Flow eine Antwort auf die \ac{HTTP} Anfrage zurück. Anwendungslogik kann durch Javascript in dem sogenannten Function Node in den Datenfluss integriert werden . Die miteinander verbundenen Knoten reichen sich außerdem Daten oder Informationen über \ac{JSON}-Objekte weiter.
+\\Schließlich können die einzelne erstellten Flows einfach innerhalb der Laufzeitumgebung deployed und ausgeführt werden. \\Durch eine große Community werden neben den standardmäßigen Knoten auch neue Knoten bereitgestellt, die den Funktionsumfang von Node Red nochmals deutlich erweitern\cite{nodeRed:nodeRed}.
+\begin{figure}[H]
+	\centering	
+	\includegraphics[scale=0.8]{images/bspFlow}
+	\caption{Beispiel eines Node Red Flows}
+	\label{img:bspFlow}
+\end{figure}
 
-\section{SQLite Datenbank}
+
+
+
+\section{Datenbank}%Dominic
+Durch die Anbindung von Sensoren werden ständig neue Daten generiert. Damit diese Daten für spätere Zwecke genutzt werden können, wie beispielsweise für die Analyse oder Erzeugen von Vorhersagen, ist es hilfreich diese zentral an einem Ort in einer Datenbanklösung abzuspeichern.
+\\NoSQL Datenbanken benötigen kein vordefiniertes Schema, um Daten abzuspeichern. Somit ist es nicht notwendig zu wissen welche Art von Daten bzw. deren Datentypen gespeichert werden sollen. Der Vorteil ergibt sich dabei, dass zusammengehörende Daten gemeinsam an einem Ort abgespeichert werden. Der Datentyp jedes einzelnen Eintrags kann dabei von Eintrag zu Eintrag variieren. Deshalb sind für diese Datenbanklösungen Strukturänderungen im Datenformat keinerlei Probleme. Sollte die Datenbank sehr groß werden und auf mehreren Servern laufen, so lassen sich diese einfach skalieren\cite{noSQL:noSQL}.
+\\Außerdem gibt es noch die Möglichkeit Daten innerhalb von relationalen Datenbanken abzuspeichern. Dabei muss zuerst ein Datenbankschema definiert werden. Hierbei ist also die abzuspeichernde Datenstruktur im Voraus bereits definiert und kann im Vergleich zu NoSQL-Datenbanken nicht einfach im Betrieb angepasst werden. Die Ablagestruktur in Tabellen sollte sich dabei am natürliche Vorkommen der Daten (Bsp.: Name, Vorname, Straße, PLZ, Ort)  orientieren. Jede Zeile einer Relation steht für ein Tupel, das eine strikte Ordnung der Attribute voraussetzt\cite{codd:Codd}. Beim Einfügen muss deshalb auf die Struktur geachtet werden.
+\\Da angenommen werden kann, dass die angeschlossenen Sensoren durchgängig gleiche Datenformate an den Raspberry Pi übermitteln und sich somit die Struktur nicht ändert, wird für den folgenden Verlauf der Arbeit ein relationales Datenmodell als Grundlage definiert. 
+
 
 \section{Regelbasiertes System} %Louisa
 Im heutigen Alltag werden kontinuierlich Daten erfasst, um auf dessen Basis Informationen zu erhalten. Daten werden aus unterschiedlichen Gründen gesammelt, meist steht jedoch hinter der Datensammlung der Wunsch einen Mehrwert aus den Daten zu schaffen. Um Daten nutzen zu können, müssen diese kanalisiert, strukturiert und archiviert werden \cite{managermagazin:datensammlung}. Regelbasierte Systeme (kurz RBS), die eine Sonderform eines Expertensystems bilden \cite{ieee:ruleBasedSystemAndNetworks}, werden für die Datenstrukturierung eingesetzt. Ursprünglich stellten diese Systeme lediglich codierte Problemlösung mit dem Wissen von menschlichen Experten dar \cite{Hayes-Roth:1985:RS:4284.4286}. Im Laufe der Zeit hat sich diese Definition erweitert. Neben Regeln, die von einem Experten gesetzt wurden, stellen regelbasierte Systeme auch Regeln auf, die auf Basis alter Datensätze erstellt wurden. Es wird aus diesem Grund bei der Erstellung eines solchen Systems unterschieden zwischen einem Experten basierten und einem Daten basierten Design. Gerade im Zuge der stark ansteigenden Datenmengen findet man regelbasierte Systeme mit einem Daten basiertem Design immer öfter im Einsatz \cite{ieee:ruleBasedSystemAndNetworks}.\\
@@ -15,7 +43,6 @@ Als zweiten Punkt, den man beim Aufstellen von Regeln beachten soll, ist die Ste
 Des Weiteren sollte das RBS durch Kombination von Regeln auch komplexere Problemstellungen lösen. Dabei werden die Ergebnisse der Regelausführung sinnvoll kombiniert. Um Probleme bestmöglich lösen zu können, sollten RBS die optimale Reihe von Regeln bestimmen und anschließend ausführen. Die nach Durchführung der Regel erhaltene Lösung zur Problemstellung sollte vom System anschließend in natürliche Sprache oder in Aktionen, die für den Menschen verständlich sind, übersetzt werden.\\
 Genutztes Wissen innerhalb eines RBS wird als problemlösendes Wissen bezeichnet und besteht aus verschiedenen Formen von Informationen. So können Informationen durch Beobachtungen gesammelt werden, aber auch durch Abstrahierung, Generalisierung oder Kategorisierung von gegebenen Daten. Neben reinen Daten werden auch Verknüpfungen von Daten als relevante Informationen angesehen, sowie Strategien zur Datengewinnung \cite{Hayes-Roth:1985:RS:4284.4286}.\\
 Bei der Erstellung eines RBS muss jedoch beachtet werden, dass ein geeignetes System stetig angepasst und verbessert werden muss und vor allem durch das hinzukommende Wissen optimalere Lösungen ermitteln kann \cite{Hayes-Roth:1985:RS:4284.4286}.
-
 
 
 
