@@ -60,6 +60,7 @@ content BLOB -> Dokument kann in db abgelegt werden
 \subsection{Datenbankschema}
 Wie sehen die DBs aus ?
 Daten in DBs schreiben? Node-Red und MQ135
+Flow vorstellen
 
 \subsection{Flows Node-Red}
 Damit die gespeicherten Daten zu den verschiedenen Sensoren auch für andere Anwendungen bereitgestellt werden können, werden mithilfe des Node-Red-Webservers REST Servies angelegt. Diese können über \ac{HTTP} Anfragen angesprochen werden und liefern als Ergebnis Daten im \ac{JSON}-Format zurück. Dabei wird je nach angesprochenem Pfad ein bestimmtes Ergebnis zurückgeliefert. \\Anfragen müssen an den Raspberry Pi bzw. dessen Webserver-Schnittstelle gesendet werden. Dabei ist darauf zu achten, dass sich der Node-Red-Webserver unter der \ac{IP}-Adresse des Raspberry Pis und dem Port 1880 erreichen lässt. Als Beispiel könnte die Adresse folgendes Format haben: 192.168.0.100:1880. \\Damit nun ein entsprechender Service aufgerufen wird, muss noch eine Pfad an die \ac{URL} angehängt werden. In NOde-Red wurden folgende REST \ac{API} Schnittstellen entwickelt:
@@ -119,27 +120,18 @@ return newMsg;
 
 Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten die Anfrage verarbeiten und die ermittelten Ergebnisse werden an die \ac{HTTP} Node gesendet. 
 
-Damit der Anwender nicht nur basierend auf der Rule Engine Sensordaten angezeigt bekommt, wird über Node Red eine \acf{API} erstellt, die jederzeit angesprochen werden kann um die neusten Daten anzuzeigen. Die \ac{URL} zum Adressieren eines Services setzt sich aus der \ac{IP}-Adresse des Raspberry's dem Port 1880 für den Node-Red-Webserver und einen relative Pfad zusammen. 
-\\\autoref{flow:TempInt} zeit beispielhaft einen Flow auf, der alle gespeicherten Einträge für einen definierten Zeitraum zurückliefert. Dazu erwartet der Service in der \ac{URL}, dass die Parameter \enquote{from} und \enquote{to} gesetzt sind. Beispielsweise könnte die Adresse zum Aufrufen folgendermaßen aussehen: \enquote{192.168.0.100:1880/temInt?from=10.05.2017\&to=25.05.2017}. Es ist zu erkennen, dass der 
-
-
-
-Außerdem werden noch Flows benötigt, die innerhalb eines definierten Intervalls die aktuellen Sensordaten abfragen und anschließen in der entsprechenden Datenbanktabelle abspeichern. In ABBILDUNG XX ist beispielhaft aufgezeigt, wie der Datenfluss in Node-Red modelliert ist, damit alle 5 Minuten ein Datenbankeintrag erstellt wird. 
-
-
-
 
 \section{Grafische Benutzeroberfläche} %Louisa
 Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann.
 \subsection{Rule Engine}
 Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen dynamisch Regeln hinzufügen zu können oder wieder zu löschen (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
 Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen erfüllen. Dabei wurden nur Rule Engines betrachtet, die in Android genutzt werden können, sowie welche mit regelmäßigen Releases. Aus der Recherche haben sich folgende Rule Engine Bibliotheken ergeben:
-\begin{itemize}
+\begin{itemize}                                                                                                                                                                                                                                                                                                                                                                                              
 	\item Easy Rules \cite{github:easyrules}
 	\item OpenRules \cite{openrules}
 	\item RuleBook \cite{github:rulebook}
 \end{itemize}
-Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Der entscheidende gemeinsame Nachteil dieser Rule Engines ist die Implementierung der Regeln. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglicht. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern, ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
+Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Der entscheidene gemeinsame Nachteil dieser Rule Engines ist die Implementierung der Regeln. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglichen. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
 Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem an die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.
 
 
