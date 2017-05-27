@@ -21,7 +21,7 @@ Verfügbarmachen der Daten
 Der Sensor Adapter ist notwendig, um die Daten aus den Sensoren auszulesen und anschließen abzuspeichern. Nachfolgend soll erklärt werden, wie die Sensoren verschaltet sein müssen, damit Eingangssignale ausgewertet werden können. 
 
 \subsubsection{Fester/ Tür-Status}
-Der Aufbau um eine Tür 
+MAGNET SCHALTER, DHT22 Sensor, MQ135, MOTION erwähnen
 
 \subsection{Persistenter Speicher}
 Basierend auf den Grundlagen soll eine relationale Datenbank zum Speichern der Sensorwerte genutzt werden. Dabei muss die Datenbank kompatibel mit dem Raspberry Pi sein, sowie möglichst ressourcenschonend agieren. \\Es ist nicht notwendig Daten über das Netzwerk in die Tabelle einzutragen, da alle Sensoren über den Raspberry eingelesen werden können und die Datenbank somit nur lokal verfügbar sein muss.  
@@ -43,24 +43,70 @@ Vergleich in Datei schreiben, MySQL, SQLite\\
 .
 \subsubsection{SQLite}
 Die SQLite Datenbank bietet für unsere definierten Einsatzzweck ausreichende Funktionalität an. Die Anwendung ist leichtgewichtig und läuft lokal. Außerdem verfolgt die Datenbank bei Transaktionen das ACID (atomic, consistent, isolated, durable) Prinzip. Datenbankzugriffe geschehen mit SQL. Alle Datenbanktabellen sind lokal in einer Datenbank-Datei gespeichert. Dies kann somit einfach kopiert werden, falls ein neuer Raspberry zum Einsatz kommen sollte.\\
-Da jeder Raspberry seine eigene Datenbank besitzen sollte, damit keine privaten Daten zentral auf einer Datenbank abgelegt werden eignet sich SQLite ebenfalls gut. 
-*******
-https://www.sqlite.org/features.html
-
-hat keine Server prozess, zero-configuration, trasaction SQL, read writes directly into ordinary disk file
-single disk file 
-ACID
-Full featured SQL
-cross platform
-standalone command line interface
-
-content BLOB -> Dokument kann in db abgelegt werden
+Da jeder Raspberry seine eigene Datenbank besitzen sollte, damit keine privaten Daten zentral auf einer Datenbank abgelegt werden eignet sich SQLite ebenfalls gut.   https://www.sqlite.org/features.html
+DATENTYPEN? TEXT, INTEGER, REAL, BLOB, NUMERIC, BOOLEAN, DATETIME
 
 
 \subsection{Datenbankschema}
+Innerhalb der SQLite Datenbank werden die Tabellen DHT, MQ135, Security und Window angelegt. Dadurch können die Daten strukturiert in Tabelle gespeichert und Werte mithilfe von SQL leicht abgefragt werden. Die vier Tabellen sind auf die Anforderungen F-10.1, F-10.2, F-10.3 und F-10.4 zurückzuführen, sodass jeder Sensor seine Werte in eine eigens dafür angelegte Datenbank schreibt. Vorteil davon ist, dass die Übersicht der von einem Sensor erzeugten Daten gewährleistet ist.\\
+Jede Tabelle besitzt pro Relation eine eindeutige ID. Dies hilft einen Datensatz eindeutig zu identifizieren. Neben der ID kann der Timestamp ebenfalls als eindeutige Identifizierung eines Datensatzes genutzt werden, da es sehr unwahrscheinlich ist, dass innerhalb einer Millisekunde zwei Datenbankeinträge in einer Tabelle erstellt werden.\\
+
+Daten aus dem DHT Sensor werden in der Tabelle DHT in folgenden Spalten abgespeichert:
+\begin{itemize}
+	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
+	\item \textbf{Temperature}: In dieser Spalte wird der Temperaturwert als REAL Number gespeichert.
+	\item \textbf{Humidity}: Wert der Luftfeutchtigkeit wird als REAL Number gespeichert.
+	\item \textbf{Sensorid}: Text, der angibt um welche Art von Temperatur- \& Luftfeuchtigkeitssensor es sich handelt.
+	\item \textbf{Timestamp}: Zeitstempel wird in Millisekunden als Integer gespeichert
+\end{itemize}
+
+Die Window Tabelle nimmt folgende Werte entgegen und speichert diese:
+\begin{itemize}
+	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
+	\item \textbf{Value}: Integer, entweder 1 für geöffnetes Fenster oder 0 für geschlossen.
+	\item \textbf{Timestamp}: Zeitstempel wird in Millisekunden als Integer gespeichert
+	\item \textbf{Room}: Beschreibung, in welchem Raum der Fensterstatus geprüft wird. 
+\end{itemize}
+
+Die MQ135 speichert die verschiedenen Werte der Gase CO2, CO und NH4 in folgenden Spalten ab.
+\begin{itemize}
+	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
+	\item \textbf{CO2}: CO2 Wert wird als REAL abgespeichert.
+	\item \textbf{CO}: CO Wert wird als REAL abgespeichert.
+	\item \textbf{NH4}: NH4 Wert wird als REAL abgespeichert. 
+	\item \textbf{Timestamp}: Zeitstempel wird in Millisekunden als Integer gespeichert
+\end{itemize}
+
+Sobald die Bibliothek Motion eine Bewegung erkennt, wird automatisch ein Datenbankeintrag generiert der die nachfolgende Struktur aufweist:
+\begin{itemize}
+	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
+	\item \textbf{Camera}: Integer, der angibt welche Camera das Bild aufgenommen hat.
+	\item \textbf{Filename}: Text, der angibt unter welchem Pfad das Bild gefunden werden kann.
+	\item \textbf{Frame}: Integer, der angibt welches aus dem Video extrahiert wurde. 
+	\item \textbf{File\_type}: Integer, der angibt um was für eine Datei es sich handelt.
+	\item \textbf{Timestamp}: Zeitstempel, der als im Format \enquote{YYYY-MM-DD HH:MM:SS} angibt, wann die erste Bewegung erkannt wurde.	
+\end{itemize}
+
+
 Wie sehen die DBs aus ?
 Daten in DBs schreiben? Node-Red und MQ135
 Flow vorstellen
+
+\autoref{flow:tempDB} zeigt den simplen Flow, damit alle 5 Minuten ein Werte in die Tabelle DHT eingetragen wird. Dazu ist es notwendig einen Input Node zu verwenden und so einzustellen, dass alle 5 Minuten ein Event ausgelöst wird. Wenn ein Event beim DHT Sensor ankommt (2. Node), reicht dieser über eine Nachricht, die aktuellen werten weiter. \autoref{list:tempIntoDB} zeigt, wie die aktuellen Werte dss DHT Sensors aus dem \enquote{msg} Objekt ausgelesen und dem neu erstellen \ac{JSON}-Objekt \enquote{newMsg} im \ac{SQL} Statement übergeben werden. Der SQLite Node nimmt anschließend das Event und die neu angelegte Nachricht entgegen und führt den \ac{SQL} Befehl  aus. Auffallend hierbei ist, dass anstatt einer ID \enquote{NULL} übergeben wird. Da die Spalte ID Primarschlüssel ist und nicht leer sein darf, wird von SQLite automatisch die neue ID gesetzt.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{images/tempIntoDB}
+	\caption{Beispiel: Temperatur/ Luftfeuchtigkeit in Datenbank}
+	\label{flow:tempDB}
+\end{figure}
+\begin{lstlisting}[label=list:tempIntoDB, caption={Neuer Eintrag in Tabelle DHT}]
+var date = Date.now();
+var newMsg = {
+	"topic": "INSERT INTO DHT VALUES(NULL,"+msg.payload+","+msg.humidity+ ", '"+msg.sensorid+"', "+date+")"
+}
+return newMsg;
+\end{lstlisting}
+
 
 \subsection{Flows Node-Red}
 Damit die gespeicherten Daten zu den verschiedenen Sensoren auch für andere Anwendungen bereitgestellt werden können, werden mithilfe des Node-Red-Webservers REST Servies angelegt. Diese können über \ac{HTTP} Anfragen angesprochen werden und liefern als Ergebnis Daten im \ac{JSON}-Format zurück. Dabei wird je nach angesprochenem Pfad ein bestimmtes Ergebnis zurückgeliefert. \\Anfragen müssen an den Raspberry Pi bzw. dessen Webserver-Schnittstelle gesendet werden. Dabei ist darauf zu achten, dass sich der Node-Red-Webserver unter der \ac{IP}-Adresse des Raspberry Pis und dem Port 1880 erreichen lässt. Als Beispiel könnte die Adresse folgendes Format haben: 192.168.0.100:1880. \\Damit nun ein entsprechender Service aufgerufen wird, muss noch eine Pfad an die \ac{URL} angehängt werden. In NOde-Red wurden folgende REST \ac{API} Schnittstellen entwickelt:
@@ -83,7 +129,7 @@ Damit die gespeicherten Daten zu den verschiedenen Sensoren auch für andere Anw
 	\label{flow:TempInt}
 \end{figure}
 Der erste Node wird dazu benötigt, um eine HTTP Request anzunehmen. Dabei ist die Route zu definieren, unter der der Service erreichbar sein soll. In diese Fall ist dies \enquote{/tempInt}. Die übergebenen Parameter werden erst in Funktions-Knoten betrachtet, d. h. die eingehenden Parameter wurden über ein JSON-Objekt an den nachfolgenden Knoten übergeben. 
-\\\autoref{list:tempInt} ist der Quellcode des Funktionsknotens. In Zeile 3 wird geprüft, ob beide Parameter gesetzt sind. Falls dies nicht der Fall ist sollen die letzten 20 Einträge aus der Datenbank geladen werden (siehe Zeile XX \autoref{list:tempInt}). Dieser Schritt ist notwendig, da der nachfolgende Knoten auf die Datenbank zugreift. Liegt keine Abfrage vor, so wird ein Fehler zurückgeworfen und der Flow wird unterbrochen. 
+\\\autoref{list:tempInt} ist der Quellcode des Funktionsknotens. In Zeile 3 wird geprüft, ob beide Parameter gesetzt sind. Falls dies nicht der Fall ist sollen die letzten 20 Einträge aus der Datenbank geladen werden (siehe Zeile 24 \autoref{list:tempInt}). Dieser Schritt ist notwendig, da der nachfolgende Knoten auf die Datenbank zugreift. Liegt keine Abfrage vor, so wird ein Fehler zurückgeworfen und der Flow wird unterbrochen. 
 \\Falls beide Parameter gesetzt wurden, müssen JavaScritp Zeitstempel generiert werden, da nur solche in der Datenbanktabelle DHT gespeichert sind. Hierfür werden in Zeile 10f die beiden Strings in Arrays unterteilt, sodass das Jahr, der Monat und die Tage separiert sind. Anschließend kann mithilfe des Date Objektes ein Zeitstempel generiert werden. Dabei ist darauf zu achten, dass JavaScript in den Monaten bei \enquote{0} zu zählen beginnt und somit der Monat um eins reduziert werden muss. \\Der timestampTo wird außerdem noch mit 23 Studen, 59 Minuten und 59 Sekunden erzeugt, damit ein einzelner Tag auch respektiert werden kann. \\Sobald beide Zeitstempel vorliegen wird die \ac{SQL} Abfrage generiert und in der Variable \enquote{selectString} gespeichert. \\Zum Schluss muss die Abfrage in einem JavaScript Objekt als Key-Value übergeben werden. Die Datenbankabfragen muss dabei immer unter dem Key \enquote{topic} abgelegt sein.  
 \begin{lstlisting}[label=list:tempInt, caption={Funktion Node-Red tempInt}]
 var selectString;
@@ -118,11 +164,20 @@ newMsg.topic = String(selectString);
 return newMsg;
 \end{lstlisting}
 
-Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten die Anfrage verarbeiten und die ermittelten Ergebnisse werden an die \ac{HTTP} Node gesendet. 
+Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten die Anfrage verarbeiten und die ermittelten Ergebnisse werden an die \ac{HTTP} Node gesendet.
+\\\autoref{list:temp}  zeigt das \ac{JSON}, das von Webserver als Antwort zurückgeliefert wird. Dieses hat durchgehend die gleiche Struktur und kann somit nach den Key-Value-Prinzip ausgelesen werden. Enthält eine Antwort mehrere Einträge, wird ein Array mit mehreren Objekten zurückgeliefert.
+\begin{lstlisting}[label=list:temp, caption={JSON Response /temp}]
+{
+	"temp": "24.60",
+	"humidity": "46.60",
+	"sensorid": "dht22",
+	"date": 1495920298490
+}
+\end{lstlisting}
 
 
 \section{Grafische Benutzeroberfläche} %Louisa
-Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann.
+Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Masse erreicht werden kann.
 \subsection{Rule Engine}
 Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen dynamisch Regeln hinzufügen zu können oder wieder zu löschen (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
 Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen erfüllen. Dabei wurden nur Rule Engines betrachtet, die in Android genutzt werden können, sowie welche mit regelmäßigen Releases. Aus der Recherche haben sich folgende Rule Engine Bibliotheken ergeben:
