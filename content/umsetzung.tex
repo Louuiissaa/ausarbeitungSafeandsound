@@ -6,15 +6,16 @@ In der Architektur werden alle wichtigen Entscheidungen, welche für die
 Entwicklung des Systems relevant und von technischer Natur sind, berücksichtigt. Die Architektur dient als Grundlage für die darauffolgende Umsetzung.
 
 \section{Raspberry Pi}
+Die zentral Einheit um Sensoren in unsere Anwendung zu integrieren bildet der Raspberry Pi. Dabei spielen dessen externe Schnittstellen eine wesentliche Rolle. \\Das \acf{CSI}
+bietet die Möglichkeit eine eigens für den Rapsberry Pi entworfene Kamera anzuschließen. Das Kameramodul kann dann über entsprechende Befehle über die Kommandozeile des Raspberry gesteuert werden. Um nun der Anforderung F-?? gerecht zu werden Bilder bei erkannter Bewegung abzuspeichern bzw. einen Livestream zu übertragen, gilt es nun Möglichkeiten zu evaluieren. 
+--> MOTION
+\\Die Sensoren für Luftfeuchtigkeits- bzw. Temperaturmessung, den Magnetkontakt, sowie den Luftqualitätssensor werden über die Pins des \ac{GPIO} angeschlossen. Dabei muss beim MQ-135 ein analoges Signal in ein digitales Signal umgewandelt werden. Dazu ist erforderlich, dass ein Analog-Digital-Wandler verwendet wird. 
 
-\subsection{Sensoren}
-\begin{itemize}
-	\item Kameramodul
-	\item Temperatursensor
-	\item Luftfeuchtigkeitssensor
-	\item Luftqualitätssensor 
-\end{itemize}
+****************************
+Verfügbarmachen der Daten 
 
+
+********************************
 
 \subsection{Sensor Adapter}
 Der Sensor Adapter ist notwendig, um die Daten aus den Sensoren auszulesen und anschließen abzuspeichern. Nachfolgend soll erklärt werden, wie die Sensoren verschaltet sein müssen, damit Eingangssignale ausgewertet werden können. 
@@ -57,26 +58,71 @@ content BLOB -> Dokument kann in db abgelegt werden
 
 
 \subsection{Datenbankschema}
+Wie sehen die DBs aus ?
+Daten in DBs schreiben? Node-Red und MQ135
 
 \subsection{Flows Node-Red}
-\begin{figure}
+Damit die gespeicherten Daten zu den verschiedenen Sensoren auch für andere Anwendungen bereitgestellt werden können, werden mithilfe des Node-Red-Webservers REST Servies angelegt. Diese können über \ac{HTTP} Anfragen angesprochen werden und liefern als Ergebnis Daten im \ac{JSON}-Format zurück. Dabei wird je nach angesprochenem Pfad ein bestimmtes Ergebnis zurückgeliefert. \\Anfragen müssen an den Raspberry Pi bzw. dessen Webserver-Schnittstelle gesendet werden. Dabei ist darauf zu achten, dass sich der Node-Red-Webserver unter der \ac{IP}-Adresse des Raspberry Pis und dem Port 1880 erreichen lässt. Als Beispiel könnte die Adresse folgendes Format haben: 192.168.0.100:1880. \\Damit nun ein entsprechender Service aufgerufen wird, muss noch eine Pfad an die \ac{URL} angehängt werden. In NOde-Red wurden folgende REST \ac{API} Schnittstellen entwickelt:
+\begin{itemize}
+	\item \textbf{/temp}: Diese Route liefert dem User den aktuellen, vom Temperatur- \& Luftfeuchtigkeitssensor gemessenen Wert zurück. 
+	\item \textbf{/tempInt}: Um sich den Temperaturverlauf innerhalb eines begrenzten Zeitraums sich anzeigen zu lassen, kann diese Route angesprochen werden. Dabei müssen ein Startdatum, sowie ein Enddatum jeweils im Format \enquote{dd.mm.yyyy} als Parameter der Anfrage mit übergeben werden.
+	\item \textbf{/window}: Gibt den aktuellen Status zurück, ob das Fenster geöffnet oder geschlossen ist.
+	\item \textbf{/motion}: Liefert als Ergebnis eine ID, einen Zeitstempel zurück, um dem Anwender mitzuteilen zu welchem Zeitpunkt erkannt wurde.
+	\item \textbf{/picture}: Dieser Service benötigt als Parameter eine ID, die über den Pfad \enquote{/motion} ermittelt werden kann. Durch diese ID kann dann der Pfad zum entsprechenden Bild geladen werden und als Antwort wird das Bild dem Anwender angezeigt.
+	\item \textbf{/mqgas}: Die aktuellen Gas Werte können über den Services herausgefunden werden.
+	\item \textbf{/gasInt}: Gleiches Prinzip, wie bei der Route \enquote{/tempInt}. Dem Request werden zwei Parameter (Startdatum, Enddatum) übergeben und die Gaswerte zurückgeliefert, die im angegebenen Zeitraum erfasst werden.
+\end{itemize}
+
+\autoref{flow:TempInt} stellt beispielhaft den Node-Red-Flow zum Abfragen des Temperatur- und Luftfeuchtigkeitsverlauf dar. Der Service wird angesprochen, wenn folgender Pfad adressiert wird: /tempInt?from=10.05.2017\&to=22.05.2017. Mit dieser Anfrage werden alle gespeicherten Werte als Antwort zurückgeliefert, die im entsprechenden Intervall liegen. wie der Node-Red-Flow zur entsprechenden Route 
+
+\begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.7]{images/tempIntFlow}
 	\caption{Beispiel: Temperatur Intervall abfragen}
 	\label{flow:TempInt}
 \end{figure}
-Damit der User nicht nur basierend auf der Rule Engine Sensordaten geliefert bekommt, wird über Node Red eine \acf{API} erstellt, die jederzeit angesprochen werden kann um die neusten Daten anzuzeigen. Die \ac{URL} setzt sich aus der \ac{IP}-Adresse des Raspberry's dem Port 1880 für Node-Red und einen relative Pfad zusammen. 
-\\Die \ac{API} hat folgenden Schnittstellen, die über \ac{HTTP}-Get Request angesprochen werden können:
-\begin{itemize}
-	\item \textbf{/temp}: Diese Route liefert dem User den aktuellen, vom Temperatur- \& Luftfeuchtigkeitssensor gemessenen Wert zurück. 
-	\item \textbf{/tempInt}: Um sich den Temperaturverlauf innerhalb eines begrenzten Zeitraums sich anzeigen zu lassen, kann diese Route angesprochen werden. Dabei müssen an den relativen Pfad zwei Parameter, \enqoute{from} und \enqoute{to},  gesetzt werden.  Beiden Parametern muss ein Datum in der Form \enquote{dd.mm.yyyy} übergeben werden. \\Die Anfrage setzt sich dann aus der \ac{IP}-Adresse, dem Port, sowie dem relativen Pfad zusammen und hat beispielsweise folgende Form: \enquote{192.168.0.100:1880/temInt?from=10.05.2017\&to=25.05.2017}
-	\item \textbf{/window}:
-	\item \textbf{/picture}:
-	\item \textbf{/motion}:
-	\item \textbf{/mqgas}:
-	\item \textbf{/gasInt}:
-	\item \textbf{/temp}:
-\end{itemize}
+Der erste Node wird dazu benötigt, um eine HTTP Request anzunehmen. Dabei ist die Route zu definieren, unter der der Service erreichbar sein soll. In diese Fall ist dies \enquote{/tempInt}. Die übergebenen Parameter werden erst in Funktions-Knoten betrachtet, d. h. die eingehenden Parameter wurden über ein JSON-Objekt an den nachfolgenden Knoten übergeben. 
+\\\autoref{list:tempInt} ist der Quellcode des Funktionsknotens. In Zeile 3 wird geprüft, ob beide Parameter gesetzt sind. Falls dies nicht der Fall ist sollen die letzten 20 Einträge aus der Datenbank geladen werden (siehe Zeile XX \autoref{list:tempInt}). Dieser Schritt ist notwendig, da der nachfolgende Knoten auf die Datenbank zugreift. Liegt keine Abfrage vor, so wird ein Fehler zurückgeworfen und der Flow wird unterbrochen. 
+\\Falls beide Parameter gesetzt wurden, müssen JavaScritp Zeitstempel generiert werden, da nur solche in der Datenbanktabelle DHT gespeichert sind. Hierfür werden in Zeile 10f die beiden Strings in Arrays unterteilt, sodass das Jahr, der Monat und die Tage separiert sind. Anschließend kann mithilfe des Date Objektes ein Zeitstempel generiert werden. Dabei ist darauf zu achten, dass JavaScript in den Monaten bei \enquote{0} zu zählen beginnt und somit der Monat um eins reduziert werden muss. \\Der timestampTo wird außerdem noch mit 23 Studen, 59 Minuten und 59 Sekunden erzeugt, damit ein einzelner Tag auch respektiert werden kann. \\Sobald beide Zeitstempel vorliegen wird die \ac{SQL} Abfrage generiert und in der Variable \enquote{selectString} gespeichert. \\Zum Schluss muss die Abfrage in einem JavaScript Objekt als Key-Value übergeben werden. Die Datenbankabfragen muss dabei immer unter dem Key \enquote{topic} abgelegt sein.  
+\begin{lstlisting}[label=list:tempInt, caption={Funktion Node-Red tempInt}]
+var selectString;
+
+if(msg.req.query.from && msg.req.query.to){
+	var fromDate = msg.req.query.from;
+	var toDate = msg.req.query.to;
+	
+	/*convert date into timestamp
+	first divide date string into day, month, year 
+	then create new Date to get an timestamp*/
+	var fDate = fromDate.split("."); 
+	var tDate = toDate.split(".");
+	
+	/*create timestamp; month-1 because Jan = 0, Feb = 1 etc.
+	date requires the order: year, month, day, hours, minutes, seconds */
+	var timestampFrom = new Date(fDate[2], fDate[1]-1, fDate[0]).getTime();
+	//to respect the whole day set hours, minutes, and seconds
+	var timestampTo = new Date(tDate[2],tDate[1]-1, tDate[0], 23, 59, 59).getTime();
+	
+	var select = "Select * FROM DHT WHERE timestamp >= "; 
+	var and = " AND timestamp <=";
+	selectString =select + timestampFrom + and + timestampTo;
+}
+else {
+	selectString = "Select * FROM DHT ORDER BY ID DESC LIMIT 20";
+}
+
+//create Message object for db access
+var newMsg = {};
+newMsg.topic = String(selectString);
+return newMsg;
+\end{lstlisting}
+
+Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten die Anfrage verarbeiten und die ermittelten Ergebnisse werden an die \ac{HTTP} Node gesendet. 
+
+Damit der Anwender nicht nur basierend auf der Rule Engine Sensordaten angezeigt bekommt, wird über Node Red eine \acf{API} erstellt, die jederzeit angesprochen werden kann um die neusten Daten anzuzeigen. Die \ac{URL} zum Adressieren eines Services setzt sich aus der \ac{IP}-Adresse des Raspberry's dem Port 1880 für den Node-Red-Webserver und einen relative Pfad zusammen. 
+\\\autoref{flow:TempInt} zeit beispielhaft einen Flow auf, der alle gespeicherten Einträge für einen definierten Zeitraum zurückliefert. Dazu erwartet der Service in der \ac{URL}, dass die Parameter \enquote{from} und \enquote{to} gesetzt sind. Beispielsweise könnte die Adresse zum Aufrufen folgendermaßen aussehen: \enquote{192.168.0.100:1880/temInt?from=10.05.2017\&to=25.05.2017}. Es ist zu erkennen, dass der 
+
+
 
 Außerdem werden noch Flows benötigt, die innerhalb eines definierten Intervalls die aktuellen Sensordaten abfragen und anschließen in der entsprechenden Datenbanktabelle abspeichern. In ABBILDUNG XX ist beispielhaft aufgezeigt, wie der Datenfluss in Node-Red modelliert ist, damit alle 5 Minuten ein Datenbankeintrag erstellt wird. 
 
