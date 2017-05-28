@@ -5,11 +5,31 @@ Auf Basis der Grundlagen und Analyse wird die Architektur des Systems erstellt.
 In der Architektur werden alle wichtigen Entscheidungen, welche für die
 Entwicklung des Systems relevant und von technischer Natur sind, berücksichtigt. Die Architektur dient als Grundlage für die darauffolgende Umsetzung.
 
-\section{Raspberry Pi}
-Die zentral Einheit um Sensoren in unsere Anwendung zu integrieren bildet der Raspberry Pi. Dabei spielen dessen externe Schnittstellen eine wesentliche Rolle. \\Das \acf{CSI}
-bietet die Möglichkeit eine eigens für den Rapsberry Pi entworfene Kamera anzuschließen. Das Kameramodul kann dann über entsprechende Befehle über die Kommandozeile des Raspberry gesteuert werden. Um nun der Anforderung F-?? gerecht zu werden Bilder bei erkannter Bewegung abzuspeichern bzw. einen Livestream zu übertragen, gilt es nun Möglichkeiten zu evaluieren. 
---> MOTION
-\\Die Sensoren für Luftfeuchtigkeits- bzw. Temperaturmessung, den Magnetkontakt, sowie den Luftqualitätssensor werden über die Pins des \ac{GPIO} angeschlossen. Dabei muss beim MQ-135 ein analoges Signal in ein digitales Signal umgewandelt werden. Dazu ist erforderlich, dass ein Analog-Digital-Wandler verwendet wird. 
+\section{Raspberry Pi} HAUPTAUGENMERK AUF BEREITSTELLUNG DER DATEN UND ANZEIGE!!!
+Die zentral Einheit um Sensoren in unsere Anwendung zu integrieren bildet der Raspberry Pi. Dabei spielen dessen externe Schnittstellen eine wesentliche Rolle. Allerdings liegt der Fokus dieser Arbeit auf der Datenbereitstellung über einen Webserver und dem Verarbeiten, sowie Anzeigen in der App, weshalb auf bereits bestehende Lösungen zurückgegriffen wird.
+\\\\Das \acf{CSI} stellt eine Möglichkeit dar, eine eigens für den Raspberry Pi entworfene Kamera anzuschließen. Das Kameramodul kann dann über entsprechende Befehle über die Kommandozeile des Raspberry gesteuert werden. Aus den Anforderung F-?? geht hervor, dass Bilder bei erkannter Bewegung gespeichert und einen Livestream umgesetzt werden sollen.\\Die Anzeige eines Live-Bildes könnte über eine sekündliche Aufnahme, die über eine Service unter einer Internetadresse verfügbar gemacht wird, umgesetzt werden. Ob innerhalb eines Bildes Bewegung erkannt wurde, könnte durch eine Vergleich eines Referenzbildes und dem aktuellen Bild ermittelt werden.\\Allerdings bietet diese Funktionalitäten bereits das Open-Source Programm \enquote{Motion} an. Es ist in der Lage Bewegung zu erkenne, Live-Bilder anzuzeigen, sowie das Abspeichern von Events bei erkannten Bewegungen\cite{motion:Motion}\\
+Motion wird 
+\\Motion wurde so konfiguriert, dass der Livestream über die \ac{IP}-Adresse des Raspberry Pis und dem Port 8081 erreichbar ist. Bewegung wird erkannt, wenn sich drei aufeinanderfolgenden Bildern um 15000 Pixel zum Referenzbild unterscheiden. Dabei ist eine Auflösung von 640x480 Pixel gewählt. Wenn für sieben Sekunden keine Bewegung mehr wahrgenommen wird, ist das Event beendet. Für dieses Event wird in der Tabelle Security (siehe \autoref{db:DB}) ein Datenbankeintrag erstellt. Außerdem wird ein Video in einem definierten Verzeichnis abgespeichert, das die ganze Sequenz der Bewegungserkennung enthält. Nachdem das Video erstellt wurde wir außerdem noch ein Bild abgespeichert, das durch die Software analysiert wurde und später dem Anwender der App dargestellt wird.
+\\\\
+Die Sensoren für Luftfeuchtigkeits- bzw. Temperaturmessung, den Magnetkontakt, sowie den Luftqualitätssensor werden über die Pins des \ac{GPIO} angeschlossen. Im Gegensatz zu MQ-135 Sensor liefern der DHT22 Sensor, und der Magnetsensor digitale Werte zurück. Die digitalen Werte können mithilfe der \enquote{bcm2835}-Bibliothek über die SPI vom Broadcom BCM 2835 Chip ausgelesen werden\cite{bcm:Bcm}. Diese können vom Raspberry ohne Einschränkungen verarbeitet werden. Dabei muss beim MQ-135 ein analoges Signal in ein digitales Signal umgewandelt werden. Dazu ist erforderlich, dass ein Analog-Digital-Wandler verwendet wird. 
+******************
+Magnetsensor https://github.com/monteslu/node-red-contrib-gpio
+magnetsensor liefet 0 oder 1 an den Eingang je nachdem ob er offen oder geschlossen ist
+*****************
+******************
+DHT22 https://flows.nodered.org/node/node-red-contrib-dht-sensor
+*****************
+******************
+MQ135
+*****************
+\\
+
+BCM2835 LIBRARY
+This is a C library for Raspberry Pi (RPi). It provides access to GPIO and other IO functions on the Broadcom BCM 2835 chip. Accesses the hardware registers directly.
+https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+
+Raspberry only digital computer 
+MCP3008 -> 8 analoge inputs 4 digital pins
 
 ****************************
 Verfügbarmachen der Daten 
@@ -47,7 +67,7 @@ Da jeder Raspberry seine eigene Datenbank besitzen sollte, damit keine privaten 
 DATENTYPEN? TEXT, INTEGER, REAL, BLOB, NUMERIC, BOOLEAN, DATETIME
 
 
-\subsection{Datenbankschema}
+\subsection{Datenbankschema}\label{db:DB}
 Innerhalb der SQLite Datenbank werden die Tabellen DHT, MQ135, Security und Window angelegt. Dadurch können die Daten strukturiert in Tabelle gespeichert und Werte mithilfe von SQL leicht abgefragt werden. Die vier Tabellen sind auf die Anforderungen F-10.1, F-10.2, F-10.3 und F-10.4 zurückzuführen, sodass jeder Sensor seine Werte in eine eigens dafür angelegte Datenbank schreibt. Vorteil davon ist, dass die Übersicht der von einem Sensor erzeugten Daten gewährleistet ist.\\
 Jede Tabelle besitzt pro Relation eine eindeutige ID. Dies hilft einen Datensatz eindeutig zu identifizieren. Neben der ID kann der Timestamp ebenfalls als eindeutige Identifizierung eines Datensatzes genutzt werden, da es sehr unwahrscheinlich ist, dass innerhalb einer Millisekunde zwei Datenbankeinträge in einer Tabelle erstellt werden.\\
 
