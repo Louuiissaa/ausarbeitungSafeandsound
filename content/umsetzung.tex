@@ -168,7 +168,7 @@ Vor Beginn der Entwicklung muss die Struktur von Regeln analysiert werden. Eine 
 Ein einzelner Wenn-Teil der Regel besteht aus einem Datentypen, Vergleichsoperator/en, Vergleichsdaten und einer Konjunktion zu einem anderen Wenn-Teil. Um dem Nutzer eine intuitivere Anwendung bieten zu können, werden Vergleichsoperatoren in Regeln angeboten, die aus zwei Operatoren bestehen. So können Vergleichsoperatoren, wie ``zwischen'' gewährleistet werden. Ein Wert ist dann zwischen zwei Werten, wenn der Datenwert größer als Vergleichswert 1 und kleiner als Vergleichswert 2 ist. Innerhalb der Rule Engine wird dementsprechend zwischen klassischen binären Operatoren und zusammengesetzten binären Operatoren unterschieden. Binäre Operatoren vergleichen zwei Werte miteinander QUELLE.\\
 Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen dynamisch Regeln hinzufügen zu können oder wieder zu löschen (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
 Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen erfüllen. Dabei wurden nur Rule Engines betrachtet, die in Android genutzt werden können, sowie welche mit regelmäßigen Releases. Aus der Recherche haben sich folgende Rule Engine Bibliotheken ergeben:
-\begin{itemize}                                                                                                                                                                                                                                                                                                                                                                                              
+\begin{itemize}                                                                                                               
 	\item Easy Rules \cite{github:easyrules}
 	\item OpenRules \cite{openrules}
 	\item RuleBook \cite{github:rulebook}
@@ -177,27 +177,63 @@ Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu �
 Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem an die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.\\
 Für die Strukturierung der Rule Engine wurden mögliche Lösungswege betrachtet. Eine Möglichkeit wäre jede Regel als Java-Klasse zu erstellen. Jede spezifische Regel wurde dann von der Klasse Regel erben, sodass die Haupteigenschaften in jeder Klasse erhalten sind. Um dem Nutzer zu ermöglichen eine neue Regel zur Laufzeit hinzuzufügen, müsste eine neue spezifische Regel-Klasse zur Laufzeit hinzugefügt werden.\\
 Das Hinzufügen von Klassen zur Laufzeit hat vor allem vier Nachteile, die in unserem Kontext relevant sind. Der erste Nachteil ist die Umgebung, in der der Quellcode ausgeführt werden muss. Zur Kompilierung zur Laufzeit muss die Umgebung eine JDK besitzen. Ohne JDK ist das Hinzufügen von Klassen zur Laufzeit nicht möglich. Ein weiterer Nachteil ist die Komplexität. Durch das Kompilieren von Klassen zur Laufzeit entsteht eine erhöhte Komplexität, aus der auch der dritte Nachteil resultiert. Die Geschwindigkeit der Applikation wird beeinträchtigt. Gerade bei einer mobilen Applikation möchte ein Nutzer nicht lange auf das Ergebnis warten. Der letzte entscheidene Nachteil ist die Sicherheit. Wenn dem Nutzer die Möglichkeit gegeben wird zur Laufzeit eine Regel hinzuzufügen, kann dieser versuchen Schadcode einzubauen. Bei erfolgreicher Schadcode-Einbettung ist die gesamte Applikation stark beeinträchtigt.\\
-Eine weitere Möglichkeit eine Rule Engine zu implementieren ist mit Hilfe eines JavaScript Interpreters. Die Regel wird dabei in JavaScript Code abgespeichert. Bei Ausführung der Rule Engine wird dann der JavaScript-Code interpretiert. Auch bei dieser Möglichkeit der Umsetzung ist ein entscheidener Nachteil, die Sicherheit. Es muss verhindert werden, dass der Nutzer bei der Spezifikation der Regel Schadcode einfügen kann, die dann durch den Interpreter ausgeführt wird.
-Leichtgewichtig durch JavaScript Interpreter J2V8 QUELLE
+Eine weitere Möglichkeit eine Rule Engine zu implementieren ist mit Hilfe eines JavaScript Interpreters. Die Regel wird dabei in JavaScript Code abgespeichert. Bei Ausführung der Rule Engine wird dann der JavaScript Code interpretiert. Auch bei dieser Möglichkeit der Umsetzung ist ein entscheidener Nachteil, die Sicherheit. Es muss verhindert werden, dass der Nutzer bei der Spezifikation der Regel Schadcode einfügen kann, die dann durch den Interpreter ausgeführt wird. Um JavaScript auf einem Android Gerät ausführen zu können, muss ein leichtgewichtiger JavaScript Interpreter gefunden werden, damit die Schnelligkeit der Anwendung nicht darunter leidet. Es wurden Rhino, Nashorn und J2V8 als mögliche  JavaScript Interpreten untersucht.\\
+Rhino ist eine JavaScript Engine mit der es möglich ist, zum einen JavaScript in Java-Bytecode zu kompilieren, sowie zur Laufzeit zu interpretieren.\cite{mozilla:rhino}. Rhino lässt sich zudem in Android einbinden. Ein Nachteil von Rhino ist die Komplexität. Innerhalb dieser Arbeit werden nur unkomplizierte if-Abfragen mit einem String Rückgabewert in JavaScript interpretiert werden müssen. Nashorn ist ein Nachfolger des Rhino Interpreters. Nashorn kommt nicht als Interpreter innerhalb dieser Arbeit in Frage, aus dem Grund, dass er keine Integration in Android zulässt.\\
+Eine weitere Möglichkeit ist die Verwendung der J2V8 JavaScript Engine \cite{github:j2v8}. Diese Engine ist eine leichtgewichtige Form der V8 Engine. V8 ist eine Google Open Source JavaScript Engine \cite{github:v8}. Der entscheidende Vorteil von J2V8 gegenüber der V8 Engine ist die Performanceverbesserung. J2V8 eignet sich dementsprechend gut für die Integration in dieser Arbeit.\\
+Um die J2V8 Engine nutzen zu können muss eine Laufzeitumgebung erstellt werden. Zu dieser Umgebung können anschließend JavaScript Code hinzugefügt werden, der ausgeführt wird. Es muss angegeben werden um welchen Rückgabewert es sich handelt. Der Rückgabewert wird dann an den Java Code übergeben. Durch die Interpretation von JavaScript kann die Rule Engine auf eine Methode reduziert werden. Im Folgenden Code ist diese aufgezeigt.
+\begin{lstlisting}[language=java]
+	public void run(HashMap<String, String> values){
+		PushMessage push = new PushMessage();
+    	V8 runtime = V8.createV8Runtime();
+        List<String> rules = db.getRuleStrings(db.getloggedInUser());
+        Iterator it = values.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            variables += "var " + entry.getKey().toString() + " = " + entry.getValue() + ";";
+        }
+        for (int r = 0; r < rules.size(); r++) {
+            String rule = rules.get(r);
+            String notificationText = runtime.executeStringScript(variables + rule);
+            runtime.release();
+            if(!notificationText.isEmpty()) {
+                push.sendNotification(notificationText);
+        }
+    }
+\end{lstlisting}
+Die Überprüfung einer Regel wird in drei Schritten durchgeführt.
+\begin{enumerate}
+\item Im ersten Schritt werden die Variablen der JavaScript Umgebung hinzugefügt. Die Variablen sind die Datentypen, die von den Sensoren übergeben werden. Auf die genaue Kommunikation der Daten von NodeRed zur Regel Engine wird später eingegangen. Die Regel Engine kann dabei unterschiedliche Datentypen übergeben bekommen, die nicht fest definiert sein müssen. 
+\item Im zweiten Schritt wird die Regel in JavaScript Format ausgeführt. Die Regel ist eine if-Abfrage, die bei Erfüllung der Kondition einen Text ausgiebt. Der Text beinhaltet den Handlungsvorschlag an den Nutzer.
+\item Im dritten Schritt wird eben dieser Handlungsvorschlag an die Java Umgebung zurückgegeben, um dem Nutzer über eine Benachrichtigung den Handlungsvorschlag zu geben.
+\end{enumerate}
 
-- User kann in einer Erweiterung Regeln definieren durch JavaScript direkt
+\subparagraph{Kommunikation der Sensordaten}
+Im Folgenden wird näher auf die Kommunikation der Sensordaten von NodeRed an die App zur Regelkontrolle eingegangen.\\
+Es müssen die Daten gebündelt an die App kommuniziert werden.\\
+Es können entweder die Daten nach einem bestimmten Zeitintervall von der App durch einen HTTP Request eingefordert werden oder NodeRed sendet die Daten in regelmäßigen Zeiteinheiten an die App. Es wurde sich innerhalb dieser Arbeit dafür entschieden die Nachrichten von NodeRed schicken zu lassen, damit im Hintergrund der App so wenig wie möglich von der App ausgeführt werden muss. Gerade bei mobilen Applikationen muss darauf geachtet werden, weil die Batterie, sowie die Netzanbindung, so gering wie möglich belastet werden sollte.\\
+Die Daten werden im JSON-Format mit Hilfe von \ac{FCM} an die App gesendet \cite{firebase:gcm}. Der zeitliche Rythmus der Datenversendung kann über das NodeRed Interface eingestellt werden. \ac{FCM} bietet drei Möglichkeiten an das Ziel der Nachricht zu definieren.
+\begin{itemize}
+	\item Nutzersegment: Nachricht wird an bestimmte Nutzersegmente versendet
+	\item Thema
+	\item Einzelnes mobiles Gerät
+\end{itemize}
+Es wurde sich für Testzwecken entschieden die Nachrichten an einzelne Geräte zu versenden. Wenn ein Sensorsystem jedoch mehrere Nutzer besitzt, bietet es sich an für jedes Sensorsystem ein Thema zu erstellen, zu dem sich die Nutzer registrieren können.\\
+Die Abbildung \ref{fig:sequenzdiagramm} zeigt in Form eines Sequenzdiagrammes den Verlauf von der Übermittlung der Daten von NodeRed an die App bis zur Auslösung der Aktion.
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{images/Sequenzdiagramm.png}
+	\caption{Sequenzdiagramm}
+	\label{fig:sequenzdiagramm}
+\end{figure}
+
+Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet werden, dass nicht zu viele Nachrichten an den Benutzer geschickt werden. Bei einer zu großen Häufigkeit an Benachrichtigungen kann der Nutzer diese als eine Belästigung ansehen \cite{gadgets:amountnotifications}. Eine geeignete Anzahl an Benachrichtigungen kann als feste Zahl nicht genannt werden und sollte an den Use Case so gut wie möglich angepasst werden.   
+
+
+- Regeln sind pro User, Sensordaten pro Raspberry Pi System --> Bewohner eines Hauses können die selben Sensordaten benutzen, aber sich ihre eigenen Daten zusammensetzen
 - Wenn neue Datentypen hinzugefügt werden sollen, müssen diese nur in NodeRed und auf der UI direkt hinzugefügt werden. Die Rule Engine kann mit neuen Datentypen ohne Quellcode Veränderung umgehen.
 - Mit JavaScript kann leicht Kontextdaten hinzugefügt werden, wie aktuelle Uhrzeit etc.
 
-%- andere Möglichkeiten:
-%	- Eigene Klasse je Regel, die von der Hauptklasse Regel erbt. --> Nachteil Neues Hinzufügen von Regeln über den Nutzer nicht ohne Quellcode Änderung möglich --> gleiches Problem wie bei den bereitserwähnten Rule Engine Bibliotheken
-%	- Zusammenbasteln eines Strings das die Wenn-Kondition beschreibt --> Problem: Auswertung des IfStetements nach Einfügen aller Variablen
-%	- JavaScript Interpreter ermöglicht Auswertung des IfStatements zur Laufzeit mit Einfügen der übergebenen Daten vom Raspberry Pi
 %--> Sequenzdiagramm - Aufrufe von Übermittlung der Daten bis Auslösung der Aktion
 
-%- Warum keine RuleEngine Bibliothek nutzen?
-%-mögliche Rule Engines: es wurden nur RuleEngines betrachtet, die in Android genutzt werden können
-%- Easy Rules
-%- OpenRules
-%- Dredd
-%- RuleBook
-%-Vorteile:  
-%- Nachteile bzw. Vorteile von diesen Engines
-%- Warum keine bekannt Rule Sprache nutzen um Regeln zu definieren? - RuleML
 
 \subsection{Daten Anzeige}
