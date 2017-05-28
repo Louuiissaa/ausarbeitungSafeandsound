@@ -1,6 +1,6 @@
 \chapter{Umsetzung} \label{sec:Umsetzung}
 
-\section{Architektur}
+\section{Architektur}\chapterauthor{Louisa Pabst}
 Auf Basis der Grundlagen und Analyse wird die Architektur des Systems erstellt.
 In der Architektur werden alle wichtigen Entscheidungen, welche für die
 Entwicklung des Systems relevant und von technischer Natur sind, berücksichtigt. Die Architektur dient als Grundlage für die darauffolgende Umsetzung.
@@ -83,9 +83,11 @@ Außerdem werden noch Flows benötigt, die innerhalb eines definierten Intervall
 
 
 
-\section{Grafische Benutzeroberfläche} %Louisa
+\section{Grafische Benutzeroberfläche}\chapterauthor{Louisa Pabst}
 Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann.
 \subsection{Rule Engine}
+Vor Beginn der Entwicklung muss die Struktur von Regeln analysiert werden. Eine Regel besteht aus einem Wenn-Teil und dem Dann-Teil. Der Wenn-Teil wiederum kann aus mehreren einzelnen Wenn-Teilen zu einem übergreifenden Wenn-Teil zusammengefasst werden. Das Zusammenfassen mehrerer Wenn-Teilen führt zu mehr Regelmöglichkeiten. Der gleiche Grund kommt bei dem Dann-Teil zum Tragen. Gerade im Hinblick auf die Integration von weiteren Akteuren (F-60.2) ist es sinnvoll mehrere Akteure innerhalb eine Regel auslösen zu können.\\
+Ein einzelner Wenn-Teil der Regel besteht aus einem Datentypen, Vergleichsoperator/en, Vergleichsdaten und einer Konjunktion zu einem anderen Wenn-Teil. Um dem Nutzer eine intuitivere Anwendung bieten zu können, werden Vergleichsoperatoren in Regeln angeboten, die aus zwei Operatoren bestehen. So können Vergleichsoperatoren, wie ``zwischen'' gewährleistet werden. Ein Wert ist dann zwischen zwei Werten, wenn der Datenwert größer als Vergleichswert 1 und kleiner als Vergleichswert 2 ist. Innerhalb der Rule Engine wird dementsprechend zwischen klassischen binären Operatoren und zusammengesetzten binären Operatoren unterschieden. Binäre Operatoren vergleichen zwei Werte miteinander QUELLE.\\
 Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen dynamisch Regeln hinzufügen zu können oder wieder zu löschen (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
 Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen erfüllen. Dabei wurden nur Rule Engines betrachtet, die in Android genutzt werden können, sowie welche mit regelmäßigen Releases. Aus der Recherche haben sich folgende Rule Engine Bibliotheken ergeben:
 \begin{itemize}
@@ -93,18 +95,31 @@ Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen 
 	\item OpenRules \cite{openrules}
 	\item RuleBook \cite{github:rulebook}
 \end{itemize}
-Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Der entscheidende gemeinsame Nachteil dieser Rule Engines ist die Implementierung der Regeln. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglicht. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern, ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
-Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem an die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.
+Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Regeln für bestimmte Werte können zur Laufzeit hinzugefügt werden. Was mit Hinblick auf Sensorenerweiterung durchaus Sinn macht. Jedoch muss jede Regel hartcodiert vor der Laufzeit in die Rule Engine hinzugefügt werden. Das ist ein entscheidener Nachteil dieser Rule Engines. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglicht. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern, ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
+Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem an die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.\\
+Für die Strukturierung der Rule Engine wurden mögliche Lösungswege betrachtet. Eine Möglichkeit wäre jede Regel als Java-Klasse zu erstellen. Jede spezifische Regel wurde dann von der Klasse Regel erben, sodass die Haupteigenschaften in jeder Klasse erhalten sind. Um dem Nutzer zu ermöglichen eine neue Regel zur Laufzeit hinzuzufügen, müsste eine neue spezifische Regel-Klasse zur Laufzeit hinzugefügt werden.\\
+Das Hinzufügen von Klassen zur Laufzeit hat vor allem vier Nachteile, die in unserem Kontext relevant sind. Der erste Nachteil ist die Umgebung, in der der Quellcode ausgeführt werden muss. Zur Kompilierung zur Laufzeit muss die Umgebung eine JDK besitzen. Ohne JDK ist das Hinzufügen von Klassen zur Laufzeit nicht möglich. Ein weiterer Nachteil ist die Komplexität. Durch das Kompilieren von Klassen zur Laufzeit entsteht eine erhöhte Komplexität, aus der auch der dritte Nachteil resultiert. Die Geschwindigkeit der Applikation wird beeinträchtigt. Gerade bei einer mobilen Applikation möchte ein Nutzer nicht lange auf das Ergebnis warten. Der letzte entscheidene Nachteil ist die Sicherheit. Wenn dem Nutzer die Möglichkeit gegeben wird zur Laufzeit eine Regel hinzuzufügen, kann dieser versuchen Schadcode einzubauen. Bei erfolgreicher Schadcode-Einbettung ist die gesamte Applikation stark beeinträchtigt.\\
+Eine weitere Möglichkeit eine Rule Engine zu implementieren ist mit Hilfe eines JavaScript Interpreters. Die Regel wird dabei in JavaScript Code abgespeichert. Bei Ausführung der Rule Engine wird dann der JavaScript-Code interpretiert. Auch bei dieser Möglichkeit der Umsetzung ist ein entscheidener Nachteil, die Sicherheit. Es muss verhindert werden, dass der Nutzer bei der Spezifikation der Regel Schadcode einfügen kann, die dann durch den Interpreter ausgeführt wird.
+Leichtgewichtig durch JavaScript Interpreter J2V8 QUELLE
 
+- User kann in einer Erweiterung Regeln definieren durch JavaScript direkt
+- Wenn neue Datentypen hinzugefügt werden sollen, müssen diese nur in NodeRed und auf der UI direkt hinzugefügt werden. Die Rule Engine kann mit neuen Datentypen ohne Quellcode Veränderung umgehen.
+- Mit JavaScript kann leicht Kontextdaten hinzugefügt werden, wie aktuelle Uhrzeit etc.
 
-- Warum keine RuleEngine Bibliothek nutzen?
--mögliche Rule Engines: es wurden nur RuleEngines betrachtet, die in Android genutzt werden können
-- Easy Rules
-- OpenRules
-- Dredd
-- RuleBook
--Vorteile:  
-- Nachteile bzw. Vorteile von diesen Engines
-- Warum keine bekannt Rule Sprache nutzen um Regeln zu definieren? - RuleML
+%- andere Möglichkeiten:
+%	- Eigene Klasse je Regel, die von der Hauptklasse Regel erbt. --> Nachteil Neues Hinzufügen von Regeln über den Nutzer nicht ohne Quellcode Änderung möglich --> gleiches Problem wie bei den bereitserwähnten Rule Engine Bibliotheken
+%	- Zusammenbasteln eines Strings das die Wenn-Kondition beschreibt --> Problem: Auswertung des IfStetements nach Einfügen aller Variablen
+%	- JavaScript Interpreter ermöglicht Auswertung des IfStatements zur Laufzeit mit Einfügen der übergebenen Daten vom Raspberry Pi
+%--> Sequenzdiagramm - Aufrufe von Übermittlung der Daten bis Auslösung der Aktion
+
+%- Warum keine RuleEngine Bibliothek nutzen?
+%-mögliche Rule Engines: es wurden nur RuleEngines betrachtet, die in Android genutzt werden können
+%- Easy Rules
+%- OpenRules
+%- Dredd
+%- RuleBook
+%-Vorteile:  
+%- Nachteile bzw. Vorteile von diesen Engines
+%- Warum keine bekannt Rule Sprache nutzen um Regeln zu definieren? - RuleML
 
 \subsection{Daten Anzeige}
