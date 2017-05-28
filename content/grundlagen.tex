@@ -31,7 +31,29 @@ Mithilfe von Node Red, das auf Node.js basiert, können Datenflüssen bzw. Flows
 Durch die Anbindung von Sensoren werden ständig neue Daten generiert. Damit diese Daten für spätere Zwecke genutzt werden können, wie beispielsweise für die Analyse oder Erzeugen von Vorhersagen, ist es hilfreich diese zentral an einem Ort in einer Datenbanklösung abzuspeichern.
 \\NoSQL Datenbanken benötigen kein vordefiniertes Schema, um Daten abzuspeichern. Somit ist es nicht notwendig zu wissen welche Art von Daten bzw. deren Datentypen gespeichert werden sollen. Der Vorteil ergibt sich dabei, dass zusammengehörende Daten gemeinsam an einem Ort abgespeichert werden. Der Datentyp jedes einzelnen Eintrags kann dabei von Eintrag zu Eintrag variieren. Deshalb sind für diese Datenbanklösungen Strukturänderungen im Datenformat keinerlei Probleme. Sollte die Datenbank sehr groß werden und auf mehreren Servern laufen, so lassen sich diese einfach skalieren\cite{noSQL:noSQL}.
 \\Außerdem gibt es noch die Möglichkeit Daten innerhalb von relationalen Datenbanken abzuspeichern. Dabei muss zuerst ein Datenbankschema definiert werden. Hierbei ist also die abzuspeichernde Datenstruktur im Voraus bereits definiert und kann im Vergleich zu NoSQL-Datenbanken nicht einfach im Betrieb angepasst werden. Die Ablagestruktur in Tabellen sollte sich dabei am natürliche Vorkommen der Daten (Bsp.: Name, Vorname, Straße, PLZ, Ort)  orientieren. Jede Zeile einer Relation steht für ein Tupel, das eine strikte Ordnung der Attribute voraussetzt\cite{codd:Codd}. Beim Einfügen muss deshalb auf die Struktur geachtet werden.
-\\Da angenommen werden kann, dass die angeschlossenen Sensoren durchgängig gleiche Datenformate an den Raspberry Pi übermitteln und sich somit die Struktur nicht ändert, wird für den folgenden Verlauf der Arbeit ein relationales Datenmodell als Grundlage definiert. 
+\\Da angenommen werden kann, dass die angeschlossenen Sensoren durchgängig gleiche Datenformate an den Raspberry Pi übermitteln und sich somit die Struktur nicht ändert, wird für den folgenden Verlauf der Arbeit ein relationales Datenmodell als Grundlage definiert.
+
+
+Basierend auf den Grundlagen soll eine relationale Datenbank zum Speichern der Sensorwerte genutzt werden. Dabei muss die Datenbank kompatibel mit dem Raspberry Pi sein, sowie möglichst ressourcenschonend agieren. \\Es ist nicht notwendig Daten über das Netzwerk in die Tabelle einzutragen, da alle Sensoren über den Raspberry eingelesen werden können und die Datenbank somit nur lokal verfügbar sein muss.
+\\Anforderungen:\\
+-Lokal \\
+-Schreibzugriffe über das Netzwerk\\
+-Concurrent writers?\\
+-Big Data -> wir haben nur kleine Datenmengen\\
+-Embedded\\
+-Small / Hardwareressourcen/ leichtgewichtig\\
+-Portabilität\\
+-User Management -> nicht notwendig\\
+-Kompatibilität mit Raspberry\\
+
+Daten nur speichern und nach außen verfügbar machen.
+
+Vergleich in Datei schreiben, MySQL, SQLite\\
+.
+\subsubsection{SQLite}
+Die SQLite Datenbank bietet für unsere definierten Einsatzzweck ausreichende Funktionalität an. Die Anwendung ist leichtgewichtig und läuft lokal. Außerdem verfolgt die Datenbank bei Transaktionen das ACID (atomic, consistent, isolated, durable) Prinzip. Datenbankzugriffe geschehen mit SQL. Alle Datenbanktabellen sind lokal in einer Datenbank-Datei gespeichert. Dies kann somit einfach kopiert werden, falls ein neuer Raspberry zum Einsatz kommen sollte.\\
+Da jeder Raspberry seine eigene Datenbank besitzen sollte, damit keine privaten Daten zentral auf einer Datenbank abgelegt werden eignet sich SQLite ebenfalls gut.   https://www.sqlite.org/features.html
+DATENTYPEN? TEXT, INTEGER, REAL, BLOB, NUMERIC, BOOLEAN, DATETIME 
 
 
 \section{Regelbasiertes System} %Louisa
