@@ -13,14 +13,14 @@ Um Informationen über das lokale Netzwerk oder gar dem Internet zu teilen ist e
 	\item \textbf{Integration/ Zugriff auf Sensoren}: Hinzufügen eines neuen Sensor sollte möglichst einfach sein
 \end{itemize} 
 Die vorangehenden Voraussetzungen deckt die Komponenten Node-Red ab.
-\subsubsection{Node Red}
+\subsubsection{Node-RED}
 Node Red wurde von IBM im Jahre 2013 entwickelt und steht als Open-Source Projekt zur Verfügung\cite{nodeRed:nodeRedAbout}.\\
 Mithilfe von Node Red, das auf Node.js basiert, können Datenflüssen bzw. Flows über eine Benutzerschnittstelle im Browser zum Ausführen vom Server-seitigen Aufgaben angelegt werden. Dabei werden verschiedene Knoten, auch Nodes genannt, miteinander verknüpft. \autoref{img:bspFlow} zeigt beispielhaft ein Flow auf, der aus den Knoten \acf{HTTP} Input, einer Funktion, und dem \ac{HTTP}. Jeder Knoten stellt somit eine spezifische Funktionalität bereit. Der \ac{HTTP} Input Node, definiert den Eintrittspunkt bzw. den relativen Pfad, an den \ac{HTTP} Anfragen vom Client gesendet werden. Als Ergebnis liefert der angelegte Flow eine Antwort auf die \ac{HTTP} Anfrage zurück. Anwendungslogik kann durch Javascript in dem sogenannten Function Node in den Datenfluss integriert werden . Die miteinander verbundenen Knoten reichen sich außerdem Daten oder Informationen über \ac{JSON}-Objekte weiter.
 \\Schließlich können die einzelne erstellten Flows einfach innerhalb der Laufzeitumgebung deployed und ausgeführt werden. \\Durch eine große Community werden neben den standardmäßigen Knoten auch neue Knoten bereitgestellt, die den Funktionsumfang von Node Red nochmals deutlich erweitern\cite{nodeRed:nodeRed}.
 \begin{figure}[H]
 	\centering	
 	\includegraphics[scale=0.8]{images/bspFlow}
-	\caption{Beispiel eines Node Red Flows}
+	\caption{Beispiel eines Node-RED Flows}
 	\label{img:bspFlow}
 \end{figure}
 
