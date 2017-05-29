@@ -67,7 +67,7 @@ var newMsg = {
 }
 return newMsg;
 \end{lstlisting}
-Der Datenfluss für das Eintragen des Status, ob das Fenster geöffnet oder geschlossen ist (vgl. \autoref{flow:winDB}), hat einen ähnlichen Aufbau wie der Datenfluss in \autoref{flwo:tempDB}. Der Konten \enquote{Pin: 18} sendet immer nur dann ein Event aus, sobald sich eine Zustandsänderung gibt. Damit Rückschlüsse auf die Daten verschiedener Sensoren besser getätigt werden können, speichert der \enquote{Inject}-Node ebefalls im Intervall von 5 Minuten den aktuellen Zustand ab. 
+Der Datenfluss für das Eintragen des Status, ob das Fenster geöffnet oder geschlossen ist (vgl. \autoref{flow:winDB}), hat einen ähnlichen Aufbau wie der Datenfluss in \autoref{flow:tempDB}. Der Konten \enquote{Pin: 18} sendet immer nur dann ein Event aus, sobald sich eine Zustandsänderung gibt. Damit Rückschlüsse auf die Daten verschiedener Sensoren besser getätigt werden können, speichert der \enquote{Inject}-Node ebefalls im Intervall von 5 Minuten den aktuellen Zustand ab. 
 Außerdem stützen mehrere Werte die Genauigkeit von Vorhersagen und Analysen lassen sich leichter generieren, indem in verschiedenen Tabellen nach dem gleichen Zeitstempel gesucht wird.
 \begin{figure}[h]
 	\centering
@@ -274,17 +274,20 @@ Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet we
 	\label{label:airquality}
 \end{minipage}
 
-Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall angeben. Dazu wird eine Eingabe über ein Start, sowie ein Enddatum notwendig. Wird nach erfolgreicher Auswahl des Intervalls der \enquote{Show Data} Button geklickt, siehe \autoref{label:tempVerlauf}, wird an den Webserver eine \ac{HTTP} Anfrage geschickt, die entweder für den angegebenen Zeitraum alle Temperatur und Luftfeuchtigkeitswerte oder MQ-135 Daten in einem \ac{JSON}-Array zurückliefert. 
+Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall angeben. Dazu wird eine Eingabe über ein Start, sowie ein Enddatum notwendig. Wird nach erfolgreicher Auswahl des Intervalls der \enquote{Show Data} Button geklickt, siehe \autoref{fig:temVerlauf}, wird an den Webserver eine \ac{HTTP} Anfrage geschickt, die entweder für den angegebenen Zeitraum alle Temperatur und Luftfeuchtigkeitswerte oder MQ-135 Daten in einem \ac{JSON}-Array zurückliefert. 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.1]{images/appVerlauf}
 	\caption{Diagramm Temperaturverlauf}
-	\label{label:temVerlauf}
+	\label{fig:temVerlauf}
 \end{figure}
 
 \autoref{list:Array} zeigt als Beispiel das \ac{JSON}-Array auf, das vom Webserver als Response gesendet wird. 
-\begin{lstlisting}[label=list:Array, caption={Beispiel: JSON Array}]
+\begin{figure}
+
+
+\begin{lstlisting}[label=list:Array, caption={Beispiel: JSON Array}][H]
 [
 	{
 		"id": 1184,
@@ -309,10 +312,11 @@ Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall ange
 	}
 ]
 \end{lstlisting}
+\end{figure}
 
-Damit nun die Daten in einem Liniendiagramm grafisch dargestellt werden können, ist es notwendig eine Bibliothek zum Visualisieren zu verwenden. Dabei viel die Auswahl auf \enquote{MPAndroidChart}\footcite{https://github.com/PhilJay/MPAndroidChart}. Allerdings gibt es viele verschiedene Bibliotheken, die als Open-Source-Software sich für diesen Zweck eignen.\\
+Damit nun die Daten in einem Liniendiagramm grafisch dargestellt werden können, ist es notwendig eine Bibliothek zum Visualisieren zu verwenden. Dabei fiel die Auswahl auf \enquote{MPAndroidChart}\footcite{https://github.com/PhilJay/MPAndroidChart}. Allerdings gibt es viele verschiedene Bibliotheken, die als Open-Source-Software sich für diesen Zweck eignen.\\
 Sobald die Webserver Response als String vorliegt, kann die in \autoref{label:getTem} aufgezeigte Funktion mit der Auswertung des Arrays beginnen. Dabei wird innerhalb der For-Schleife aus jedem \ac{JSON} Objekt der Temperatur- und Luftfeuchtigkeitswert ausgelesen. Die jeweiligen Werte müssen dann der entsprechenden ArrayListe als Entry übergeben werden (vgl. \autoref{label:getTem} Zeile 8ff). Ein Entry entspricht dabei einem Tupel aus zwei Werten für die x und y Koordinate.\\Nachdem alle Werte in der ArrayList \enquote{tempList} bzw. \enquote{humidityList} gespeichert sind, muss eine neue LineDataSet erzeugt werden, die passend zu den Werten noch eine Beschreibung hinzufügt. \\
-Damit nun beide LineDataSets in einem Diagramm angezeigt werden können, wird in Zeile 22 eine neue ArrayListe definiert und bei LineDataSets hinzugefügt. Abschließend ein neues LineData Object erstellt und zurückgegeben werden. 
+Damit nun beide LineDataSets in einem Diagramm angezeigt werden können, wird in Zeile 22 eine neue ArrayListe definiert und beide LineDataSet Objekte hinzugefügt. Abschließend ein neues LineData Object erstellt und zurückgegeben werden. 
 
 \begin{lstlisting}[label=label:getTem][h]
 public LineData getTemHumDataForDiagramm(String s){
