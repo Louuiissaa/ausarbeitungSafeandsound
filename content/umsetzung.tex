@@ -1,9 +1,5 @@
 \chapter{Umsetzung} \label{sec:Umsetzung}
 Im folgenden Kapitel wird die Umsetzung beschrieben.
-\section{Architektur}\chapterauthor{Louisa Pabst}
-Auf Basis der Grundlagen und Analyse wird die Architektur des Systems erstellt.
-In der Architektur werden alle wichtigen Entscheidungen, welche für die
-Entwicklung des Systems relevant und von technischer Natur sind, berücksichtigt. Die Architektur dient als Grundlage für die darauffolgende Umsetzung.
 
 \section{Datenbankschema}\label{db:DB}\chapterauthor{Dominic Steinhauser}
 Innerhalb der SQLite Datenbank werden die Tabellen DHT, MQ135, Security und Window angelegt. Dadurch können die Sensordaten strukturiert in Tabelle gespeichert und Werte mithilfe von \acf{SQL} leicht abgefragt werden. Die vier Tabellen sind auf die Anforderungen F-10.1, F-10.2, F-10.3 und F-10.4 zurückzuführen, sodass jeder Sensor seine Werte in eine eigens dafür angelegte Datenbank schreibt. Vorteil davon ist, dass die Übersichtlichkeit der von einem Sensor erzeugten Daten gewährleistet ist.\\
@@ -171,26 +167,37 @@ Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten 
 }
 \end{lstlisting}
 
-\section{Grafische Benutzeroberfläche}
-Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann. Die Startseite der Anwendung ist in \autoref{label:appMain} dargestellt.
+
+\section{Mobile Android Applikation}
+Als grafische Benutzerschnittstelle , für das in dieser Arbeit erläuterte System, wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an, ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, da das Android-Betriebssystem den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Masse erreicht werden kann.
+
+\subsection{Architektur der mobilen Android Applikation}\chapterauthor{Louisa Pabst}
+Auf Grundlage der Anforderungen wird die Architektur der mobilen Android Applikation erstellt.
+In der Architektur werden alle wichtigen Entscheidungen, welche für die Entwicklung des Systems relevant und von technischer Natur sind, berücksichtigt. Die Architektur dient als Grundlage für die darauffolgende Umsetzung der Applikation.\\
+Um die Anwendung strukturierter entwickeln zu können, wird ein Entwurfsmuster zur Strkturierung der Applikation genutzt. Als Entwurfsmuster bietet sich das \ac{MVC} Entwurfsmuster an. Das \ac{MVC} Designpattern beschreibt eine Architektur zum Anordnen von Objekten. Das \ac{MVC} Entwurfsmuster ermöglicht dabei, einen großen Spielraum für individuelle Anpassungen, weil es nicht starr definiert ist \cite{bucanek:modelviewcontroller}.\\
+MVC ermöglicht zwischen der Anzeige der Daten, der Datenverwaltung und der Datenspeicherung eine Unabhängigkeit der Daten zu gewährleisten. So müssen bei Veränderungen des Datenmodells keine Anpassungen an der grafischen Benutzerschnittstelle direkt durchgeführt werden. Es können auch mehrere Views zu einem Model gehören ohne sich gegenseitig zu behindern. Was beachtet werden muss, ist das ein \ac{MVC} Entwurfsmuster bei kleinen Softwareprojekten schnell den Code unnötig aufblasen lässt. Innerhalb dieser Arbeit wird es jedoch als sinnvoll erachtete und genutzt. Zum einen das komplexe Datenmodell und zum Anderen die visuelle Aufbereitung der Daten rechtfertigen die Nutzung eines MVC Musters. Eine Wartung des Quelltextes wird durch ein \ac{MVC} Entwurfsmuster erleichtert, da es hilft den Code übersichtlich aufzuteilen \cite{bucanek:modelviewcontroller}.
+
+
 \subsection{Rule Engine}\chapterauthor{Louisa Pabst}
-Vor Beginn der Entwicklung muss die Struktur von Regeln analysiert werden. Eine Regel besteht aus einem Wenn-Teil und dem Dann-Teil. Der Wenn-Teil wiederum kann aus mehreren einzelnen Wenn-Teilen zu einem übergreifenden Wenn-Teil zusammengefasst werden. Das Zusammenfassen mehrerer Wenn-Teilen führt zu mehr Regelmöglichkeiten. Der gleiche Grund kommt bei dem Dann-Teil zum Tragen. Gerade im Hinblick auf die Integration von weiteren Akteuren (F-60.2) ist es sinnvoll mehrere Akteure innerhalb eine Regel auslösen zu können.\\
-Ein einzelner Wenn-Teil der Regel besteht aus einem Datentypen, Vergleichsoperator/en, Vergleichsdaten und einer Konjunktion zu einem anderen Wenn-Teil. Um dem Nutzer eine intuitivere Anwendung bieten zu können, werden Vergleichsoperatoren in Regeln angeboten, die aus zwei Operatoren bestehen. So können Vergleichsoperatoren, wie ``zwischen'' gewährleistet werden. Ein Wert ist dann zwischen zwei Werten, wenn der Datenwert größer als Vergleichswert 1 und kleiner als Vergleichswert 2 ist. Innerhalb der Rule Engine wird dementsprechend zwischen klassischen binären Operatoren und zusammengesetzten binären Operatoren unterschieden. Binäre Operatoren vergleichen zwei Werte miteinander QUELLE.\\
-Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen dynamisch Regeln hinzufügen zu können oder wieder zu löschen (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
+Vor Beginn der Entwicklung muss die Struktur von Regeln analysiert werden. Eine Regel besteht aus einem Wenn-Teil und dem Dann-Teil. Der Wenn-Teil wiederum kann aus mehreren einzelnen Wenn-Teile zu einem übergreifenden Wenn-Teil zusammengefasst werden. Das Zusammenfassen mehrerer Wenn-Teilen führt zu mehr Regelmöglichkeiten. Der gleiche Grund kommt bei dem Dann-Teil zum Tragen. Gerade im Hinblick auf die Integration von weiteren Akteuren (F-60.2) ist es sinnvoll, mehrere Akteure innerhalb einer Regel auslösen zu können.\\
+Ein einzelner Wenn-Teil der Regel besteht aus einem Datentypen, Vergleichsoperator/en, Vergleichsdaten und einer Konjunktion zu einem anderen Wenn-Teil. Um dem Nutzer eine intuitivere Anwendung bieten zu können, werden Vergleichsoperatoren in Regeln angeboten, die aus zwei Operatoren bestehen. So können Vergleichsoperatoren, wie ``zwischen'' gewährleistet werden. Ein Wert ist dann zwischen zwei Werten, wenn der Datenwert größer als Vergleichswert 1 und kleiner als Vergleichswert 2 ist. Innerhalb der Rule Engine wird dementsprechend zwischen klassischen binären und zusammengesetzten binären Operatoren unterschieden. Binäre Operatoren vergleichen zwei Werte miteinander \cite{unilinz:binaereoperatoren}.\\
+Erstellte Regeln werden dem Ersteller direkt zugeordnet. Die Sensordaten sind im Gegensatz nicht Nutzern zugeordnet, sondern einem Raspberry Pi. Das bedeutet mehrere Bewohner eines Hauses können auf die gleichen Sensoren zugreifen, sich aber individuelle Regeln auf ihre Bedürnisse hin definieren.\\
+Die Rule Engine wird nach den Anforderungen aus Kapitel \ref{sec:Anforderungen} entwickelt. Demnach muss die Rule Engine dem Nutzer ermöglichen, dynamisch Regeln hinzufügen oder wieder zu löschen zu können. (F-30.1). Grenzwerte oder Wertebereiche kann der Nutzer für die erfassten Datentypen (F-10) selbst bestimmen (F-30.2). Des Weiteren soll die Rule Engine zeitliche Aspekte in den Regeldefinitionen einbinden können. Der Nutzer kann demnach zeitliche Intervalle festlegen, in denen ein Wert oder Wertebereich gehalten werden soll. Die Definition von Datenabhängikeiten kann von der Rule Engine verarbeitet werden, um optimalere Aktionen auslösen zu können (F-30.5).\\
 Es werden mögliche Rule Engines recherchiert, die die gestellten Anforderungen erfüllen. Dabei wurden nur Rule Engines betrachtet, die in Android genutzt werden können, sowie welche mit regelmäßigen Releases. Aus der Recherche haben sich folgende Rule Engine Bibliotheken ergeben:
 \begin{itemize}                                                                                                               
 	\item Easy Rules \cite{github:easyrules}
 	\item OpenRules \cite{openrules}
 	\item RuleBook \cite{github:rulebook}
 \end{itemize}
-Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Regeln für bestimmte Werte können zur Laufzeit hinzugefügt werden. Was mit Hinblick auf Sensorenerweiterung durchaus Sinn macht. Jedoch muss jede Regel hartcodiert vor der Laufzeit in die Rule Engine hinzugefügt werden. Das ist ein entscheidener Nachteil dieser Rule Engines. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglicht. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern, ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
-Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem an die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.\\
-Für die Strukturierung der Rule Engine wurden mögliche Lösungswege betrachtet. Eine Möglichkeit wäre jede Regel als Java-Klasse zu erstellen. Jede spezifische Regel wurde dann von der Klasse Regel erben, sodass die Haupteigenschaften in jeder Klasse erhalten sind. Um dem Nutzer zu ermöglichen eine neue Regel zur Laufzeit hinzuzufügen, müsste eine neue spezifische Regel-Klasse zur Laufzeit hinzugefügt werden.\\
+Diese Rule Engines bieten gute Möglichkeiten Regeln zu erstellen und diese zu überprüfen. Regeln für bestimmte Werte können zur Laufzeit hinzugefügt werden. Dies ist im Hinblick auf die Sensorenerweiterung durchaus sinnvoll. Jede Regel muss jedoch hartcodiert vor der Laufzeit in die Rule Engine hinzugefügt werden. Das ist ein entscheidener Nachteil dieser Rule Engines. Durch die Recherche konnte keine Engine gefunden werden, die eine dynamische Erstellung von neuen Regeln über die Oberfläche ermöglicht. Die Definition neuer Regeln durch den Nutzer ohne den Quellcode zu verändern, ist jedoch eine essentielle Anforderung. Aus diesem Grund wurde sich dafür entschieden, eine Rule Engine selbst zu implementieren.\\
+Bei der Implementierung der Rule Engine wurden die Ergebnisse der Recherche miteinbezogen. Vor allem die Struktur der Regeln zu ihren Wenn- und Dann-Teilen der Regel Engine RuleBook wurde bei der Implementierung betrachtet.\\
+Für die Strukturierung der Rule Engine wurden mögliche Lösungswege betrachtet. Eine Möglichkeit wäre jede Regel als Java-Klasse zu erstellen. Jede spezifische Regel würde dann von der Klasse Regel erben, sodass die Haupteigenschaften in jeder Klasse erhalten sind. Um dem Nutzer das Hinzufügen einer neuen Regel zur Laufzeit zu ermöglichen,müsste eine neue spezifische Regel-Klasse zur Laufzeit hinzugefügt werden.
+
 Das Hinzufügen von Klassen zur Laufzeit hat vor allem vier Nachteile, die in unserem Kontext relevant sind. Der erste Nachteil ist die Umgebung, in der der Quellcode ausgeführt werden muss. Zur Kompilierung zur Laufzeit muss die Umgebung eine JDK besitzen. Ohne JDK ist das Hinzufügen von Klassen zur Laufzeit nicht möglich. Ein weiterer Nachteil ist die Komplexität. Durch das Kompilieren von Klassen zur Laufzeit entsteht eine erhöhte Komplexität, aus der auch der dritte Nachteil resultiert. Die Geschwindigkeit der Applikation wird beeinträchtigt. Gerade bei einer mobilen Applikation möchte ein Nutzer nicht lange auf das Ergebnis warten. Der letzte entscheidene Nachteil ist die Sicherheit. Wenn dem Nutzer die Möglichkeit gegeben wird zur Laufzeit eine Regel hinzuzufügen, kann dieser versuchen Schadcode einzubauen. Bei erfolgreicher Schadcode-Einbettung ist die gesamte Applikation stark beeinträchtigt.\\
-Eine weitere Möglichkeit eine Rule Engine zu implementieren ist mit Hilfe eines JavaScript Interpreters. Die Regel wird dabei in JavaScript Code abgespeichert. Bei Ausführung der Rule Engine wird dann der JavaScript Code interpretiert. Auch bei dieser Möglichkeit der Umsetzung ist ein entscheidener Nachteil, die Sicherheit. Es muss verhindert werden, dass der Nutzer bei der Spezifikation der Regel Schadcode einfügen kann, die dann durch den Interpreter ausgeführt wird. Um JavaScript auf einem Android Gerät ausführen zu können, muss ein leichtgewichtiger JavaScript Interpreter gefunden werden, damit die Schnelligkeit der Anwendung nicht darunter leidet. Es wurden Rhino, Nashorn und J2V8 als mögliche  JavaScript Interpreten untersucht.\\
-Rhino ist eine JavaScript Engine mit der es möglich ist, zum einen JavaScript in Java-Bytecode zu kompilieren, sowie zur Laufzeit zu interpretieren.\cite{mozilla:rhino}. Rhino lässt sich zudem in Android einbinden. Ein Nachteil von Rhino ist die Komplexität. Innerhalb dieser Arbeit werden nur unkomplizierte if-Abfragen mit einem String Rückgabewert in JavaScript interpretiert werden müssen. Nashorn ist ein Nachfolger des Rhino Interpreters. Nashorn kommt nicht als Interpreter innerhalb dieser Arbeit in Frage, aus dem Grund, dass er keine Integration in Android zulässt.\\
+Eine weitere Möglichkeit eine Rule Engine zu implementieren, ist diese mit Hilfe eines JavaScript Interpreters zu realisieren. Die Regel wird dabei in JavaScript Code abgespeichert. Bei Ausführung der Rule Engine wird dann der JavaScript Code interpretiert. Auch bei dieser Möglichkeit der Umsetzung ist die Sicherheit ein entscheidender Nachteil. Es muss verhindert werden, dass der Nutzer bei der Spezifikation der Regel Schadcode einfügen kann, die dann durch den Interpreter ausgeführt wird. Um JavaScript auf einem Android Gerät ausführen zu können, muss ein leichtgewichtiger JavaScript Interpreter gefunden werden, damit die Schnelligkeit der Anwendung nicht darunter leidet. Es wurden Rhino, Nashorn und J2V8 als mögliche  JavaScript Interpreten untersucht.\\
+Rhino ist eine JavaScript Engine mit der es möglich ist JavaScript in Java Bytecode zu kompilieren und zur Laufzeit zu interpretieren.\cite{mozilla:rhino}. Rhino lässt sich zudem in Android einbinden. Ein Nachteil von Rhino ist die Komplexität. Innerhalb dieser Arbeit werden nur unkomplizierte if-Abfragen mit einem String Rückgabewert in JavaScript interpretiert werden müssen. Nashorn ist ein Nachfolger des Rhino Interpreters. Nashorn kommt nicht als Interpreter innerhalb dieser Arbeit in Frage, da dieser keine Integration in Android zulässt.\\
 Eine weitere Möglichkeit ist die Verwendung der J2V8 JavaScript Engine \cite{github:j2v8}. Diese Engine ist eine leichtgewichtige Form der V8 Engine. V8 ist eine Google Open Source JavaScript Engine \cite{github:v8}. Der entscheidende Vorteil von J2V8 gegenüber der V8 Engine ist die Performanceverbesserung. J2V8 eignet sich dementsprechend gut für die Integration in dieser Arbeit.\\
-Um die J2V8 Engine nutzen zu können muss eine Laufzeitumgebung erstellt werden. Zu dieser Umgebung können anschließend JavaScript Code hinzugefügt werden, der ausgeführt wird. Es muss angegeben werden um welchen Rückgabewert es sich handelt. Der Rückgabewert wird dann an den Java Code übergeben. Durch die Interpretation von JavaScript kann die Rule Engine auf eine Methode reduziert werden. Im Folgenden Code ist diese aufgezeigt.
+Um die J2V8 Engine nutzen zu können, muss eine Laufzeitumgebung erstellt werden. Zu dieser Umgebung kann anschließend JavaScript Code hinzugefügt werden, der ausgeführt wird. Dabei muss angegeben werden um welchen Rückgabewert es sich handelt. Der Rückgabewert wird dann an den Java Code übergeben. Durch die Interpretation von JavaScript kann die Rule Engine auf eine Methode reduziert werden. Im Folgenden Code ist diese aufgezeigt.
 \begin{lstlisting}[language=java]
 	public void run(HashMap<String, String> values){
 		PushMessage push = new PushMessage();
@@ -212,39 +219,32 @@ Um die J2V8 Engine nutzen zu können muss eine Laufzeitumgebung erstellt werden.
 \end{lstlisting}
 Die Überprüfung einer Regel wird in drei Schritten durchgeführt.
 \begin{enumerate}
-\item Im ersten Schritt werden die Variablen der JavaScript Umgebung hinzugefügt. Die Variablen sind die Datentypen, die von den Sensoren übergeben werden. Auf die genaue Kommunikation der Daten von NodeRed zur Regel Engine wird später eingegangen. Die Regel Engine kann dabei unterschiedliche Datentypen übergeben bekommen, die nicht fest definiert sein müssen. 
-\item Im zweiten Schritt wird die Regel in JavaScript Format ausgeführt. Die Regel ist eine if-Abfrage, die bei Erfüllung der Kondition einen Text ausgiebt. Der Text beinhaltet den Handlungsvorschlag an den Nutzer.
-\item Im dritten Schritt wird eben dieser Handlungsvorschlag an die Java Umgebung zurückgegeben, um dem Nutzer über eine Benachrichtigung den Handlungsvorschlag zu geben.
+\item Im ersten Schritt werden die Variablen der JavaScript Umgebung hinzugefügt. Die Variablen sind die Datentypen, die von den Sensoren übergeben werden. Auf die genaue Kommunikation der Daten von Node-RED zur Regel Engine wird später eingegangen. Die Regel Engine kann dabei unterschiedliche Datentypen übergeben bekommen, die nicht fest definiert sein müssen. 
+\item Im zweiten Schritt wird die Regel in JavaScript Format ausgeführt. Die Regel ist eine if-Abfrage, die bei Erfüllung der Kondition einen Text ausgibt. Der Text beinhaltet den Handlungsvorschlag an den Nutzer.
+\item Im dritten Schritt wird eben dieser Handlungsvorschlag an die Java Umgebung zurückgegeben, um dem Nutzer über eine Benachrichtigung den Handlungsvorschlag zu eröffnen.
 \end{enumerate}
 
 \subparagraph{Kommunikation der Sensordaten}
-Im Folgenden wird näher auf die Kommunikation der Sensordaten von NodeRed an die App zur Regelkontrolle eingegangen.\\
-Es müssen die Daten gebündelt an die App kommuniziert werden.\\
-Es können entweder die Daten nach einem bestimmten Zeitintervall von der App durch einen HTTP Request eingefordert werden oder NodeRed sendet die Daten in regelmäßigen Zeiteinheiten an die App. Es wurde sich innerhalb dieser Arbeit dafür entschieden die Nachrichten von NodeRed schicken zu lassen, damit im Hintergrund der App so wenig wie möglich von der App ausgeführt werden muss. Gerade bei mobilen Applikationen muss darauf geachtet werden, weil die Batterie, sowie die Netzanbindung, so gering wie möglich belastet werden sollte.\\
-Die Daten werden im JSON-Format mit Hilfe von \ac{FCM} an die App gesendet \cite{firebase:gcm}. Der zeitliche Rythmus der Datenversendung kann über das NodeRed Interface eingestellt werden. \ac{FCM} bietet drei Möglichkeiten an das Ziel der Nachricht zu definieren.
+Im Folgenden wird näher auf die Kommunikation der Sensordaten von Node-RED an die App zur Regelkontrolle eingegangen.\\
+Die Daten müssen gebündelt an die App kommuniziert werden.\\
+Entweder können die Daten nach einem bestimmten Zeitintervall von der App durch einen HTTP Request eingefordert werden oder durch Node-RED die Daten in regelmäßigen Zeiteinheiten an die App gesendet werden. Es wurde sich innerhalb dieser Arbeit dafür entschieden die Nachrichten von Node-RED schicken zu lassen, damit im Hintergrund der App so wenig wie möglich von der App ausgeführt werden muss. Gerade bei mobilen Applikationen muss darauf geachtet werden, die Batterie und die Netzanbindung so gering wie möglich zu belasten. \\
+Die Daten werden im JSON-Format mit Hilfe von \ac{FCM} an die App gesendet \cite{firebase:gcm}. Der zeitliche Rythmus der Datenversendung kann über das Node-RED Interface eingestellt werden. \ac{FCM} bietet drei Möglichkeiten an, das Ziel der Nachricht zu definieren.
 \begin{itemize}
-	\item Nutzersegment: Nachricht wird an bestimmte Nutzersegmente versendet
-	\item Thema
-	\item Einzelnes mobiles Gerät
+	\item Nutzersegment: Nachricht wird an alle geräte eines bestimmten Nutzersegmentes versendet
+	\item Thema: Nachricht wird an alle Geräte gesendet, die sich zu einem Thema aboniert haben
+	\item Einzelnes mobiles Gerät: Nachricht wird an ein einzelnes Gerät gesendet
 \end{itemize}
-Es wurde sich für Testzwecken entschieden die Nachrichten an einzelne Geräte zu versenden. Wenn ein Sensorsystem jedoch mehrere Nutzer besitzt, bietet es sich an für jedes Sensorsystem ein Thema zu erstellen, zu dem sich die Nutzer registrieren können.\\
-Die Abbildung \ref{fig:sequenzdiagramm} zeigt in Form eines Sequenzdiagrammes den Verlauf von der Übermittlung der Daten von NodeRed an die App bis zur Auslösung der Aktion.
+Für Testzwecke wurde sich entschieden, die Nachrichten an einzelne Geräte zu versenden. Wenn ein Sensorsystem jedoch mehrere Nutzer besitzt, bietet es sich an für jedes Sensorsystem ein Thema zu erstellen, zu dem sich die Nutzer registrieren können.\\
+Die Abbildung \ref{fig:sequenzdiagramm} zeigt in Form eines Sequenzdiagrammes den Verlauf von der Übermittlung
+der Daten von Node-RED an die App bis zur Auslösung der Aktion an.
 \begin{figure}
 	\centering
 	\includegraphics[width=1\textwidth]{images/Sequenzdiagramm.png}
-	\caption{Sequenzdiagramm}
+	\caption{Sequenzdiagramm zur Regelkontrolle}
 	\label{fig:sequenzdiagramm}
 \end{figure}
 
-Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet werden, dass nicht zu viele Nachrichten an den Benutzer geschickt werden. Bei einer zu großen Häufigkeit an Benachrichtigungen kann der Nutzer diese als eine Belästigung ansehen \cite{gadgets:amountnotifications}. Eine geeignete Anzahl an Benachrichtigungen kann als feste Zahl nicht genannt werden und sollte an den Use Case so gut wie möglich angepasst werden.   
-
-
-- Regeln sind pro User, Sensordaten pro Raspberry Pi System --> Bewohner eines Hauses können die selben Sensordaten benutzen, aber sich ihre eigenen Daten zusammensetzen
-- Wenn neue Datentypen hinzugefügt werden sollen, müssen diese nur in NodeRed und auf der UI direkt hinzugefügt werden. Die Rule Engine kann mit neuen Datentypen ohne Quellcode Veränderung umgehen.
-- Mit JavaScript kann leicht Kontextdaten hinzugefügt werden, wie aktuelle Uhrzeit etc.
-
-%--> Sequenzdiagramm - Aufrufe von Übermittlung der Daten bis Auslösung der Aktion
-
+Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet werden, dass nicht zu viele Nachrichten an den Benutzer geschickt werden. Bei einer zu großen Häufigkeit an Benachrichtigungen kann der Nutzer diese als eine Belästigung ansehen \cite{gadgets:amountnotifications}. Eine geeignete Anzahl an Benachrichtigungen kann als feste Zahl nicht genannt werden und sollte an den Use Case so gut wie möglich angepasst werden.
 
 \subsection{Daten Anzeige}\chapterauthor{Dominic Steinhauser}
 \autoref{label:main} die Startseite der Anwendung. Sie bietet schnellen Zugriff auf alle ausführbaren Aktionen in der App.
@@ -265,7 +265,7 @@ Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet we
 
 Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall angeben. Dazu wird eine Eingabe über ein Start, sowie ein Enddatum notwendig. Wird nach erfolgreicher Auswahl des Intervalls der \enquote{Show Data} Button geklickt, siehe \autoref{label:tempVerlauf}, wird an den Webserver eine \ac{HTTP} Anfrage geschickt, die entweder für den angegebenen Zeitraum alle Temperatur und Luftfeuchtigkeitswerte oder MQ-135 Daten in einem \ac{JSON}-Array zurückliefert. 
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.1]{images/appVerlauf}
 	\caption{Diagramm Temperaturverlauf}
