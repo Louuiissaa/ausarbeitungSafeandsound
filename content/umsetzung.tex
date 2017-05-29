@@ -287,7 +287,7 @@ Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall ange
 \begin{figure}
 
 
-\begin{lstlisting}[label=list:Array, caption={Beispiel: JSON Array}][H]
+\begin{lstlisting}[label=list:Array, caption={Beispiel: JSON Array}]
 [
 	{
 		"id": 1184,
@@ -318,7 +318,7 @@ Damit nun die Daten in einem Liniendiagramm grafisch dargestellt werden können,
 Sobald die Webserver Response als String vorliegt, kann die in \autoref{label:getTem} aufgezeigte Funktion mit der Auswertung des Arrays beginnen. Dabei wird innerhalb der For-Schleife aus jedem \ac{JSON} Objekt der Temperatur- und Luftfeuchtigkeitswert ausgelesen. Die jeweiligen Werte müssen dann der entsprechenden ArrayListe als Entry übergeben werden (vgl. \autoref{label:getTem} Zeile 8ff). Ein Entry entspricht dabei einem Tupel aus zwei Werten für die x und y Koordinate.\\Nachdem alle Werte in der ArrayList \enquote{tempList} bzw. \enquote{humidityList} gespeichert sind, muss eine neue LineDataSet erzeugt werden, die passend zu den Werten noch eine Beschreibung hinzufügt. \\
 Damit nun beide LineDataSets in einem Diagramm angezeigt werden können, wird in Zeile 22 eine neue ArrayListe definiert und beide LineDataSet Objekte hinzugefügt. Abschließend ein neues LineData Object erstellt und zurückgegeben werden. 
 
-\begin{lstlisting}[label=label:getTem][h]
+\begin{lstlisting}[label=label:getTem]
 public LineData getTemHumDataForDiagramm(String s){
 
 	List<Entry> tempList = new ArrayList<Entry>();
