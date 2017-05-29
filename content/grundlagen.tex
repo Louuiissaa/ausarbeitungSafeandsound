@@ -1,22 +1,22 @@
 \chapter{Grundlagen}
 Im folgenden Abschnitt sollen die Grundlagen, die für diese Arbeit relevant sind näher erläutert werden.
 
-\section{Raspberry Pi} \chapterauthor{Dominic}
+\section{Raspberry Pi} \chapterauthor{Dominic Steinhauser}
 Der Einplatinencomputer ist ein zentrales Konstrukt, um den perfekten Raum zu verwirklichen. Durch das Anschließen von Sensoren können Bedingungen über das regelbasierte System für den perfekten Raum definiert und überwacht werden. Außerdem lässt sich durch den Anschluss eines Kameramoduls der Raum auf Bewegung prüfen. Das Ziel beim Betreiben eines solches Computers in einem Raum ist, einer Person dabei zu helfen seine Umgebung auf perfekte Eigenschaften zu kontrollieren und überwachen, sodass diese sich in ihrer Umgebung stets wohlfühlt. 
 \\Außerdem wird der Raspberry Pi als Webserver eingesetzt, um Daten verschiedenen Applikationen bereitzustellen. 
 
 \subsection{Webserver}
-Um Informationen über das lokale Netzwerk oder im Internet zu teilen ist es notwendig, dass ein Webserver auf dem Raspberry Pi ausgeführt wird. Dieser bildet einen Einstiegspunkt, um Daten anderen Anwendungen bereitzustellen. Außerdem müssen die Sensoren integriert bzw. anfallende Daten in einer Datenbank gespeichert werden können. Deshalb ergaben sich bei der Auswahl des Webserver folgende Kriterien:
+Um Informationen über das lokale Netzwerk oder im Internet zu teilen ist es notwendig, dass ein Webserver auf dem Raspberry Pi ausgeführt wird\cite{t3n:t3n}. Dieser bildet einen Einstiegspunkt, um Daten anderen Anwendungen bereitzustellen. Außerdem müssen die Sensoren integriert bzw. anfallende Daten in einer Datenbank gespeichert werden können. Deshalb ergaben sich bei der Auswahl des Webserver folgende Kriterien:
 \begin{itemize}
 	\item \textbf{Eventbasierte Engine}: Anfragen von Anwendungen sollen bei Bedarf bearbeitet werden
 	\item \textbf{Erweiterbarkeit}: Hinzufügen neuer serverseitiger Schnittstellen muss gewährleistet sein
 	\item \textbf{Integration/ Zugriff auf Sensoren}: Hinzufügen eines neuen Sensor sollte möglichst einfach sein
 \end{itemize} 
-Diese Anforderungen an einen Webserver decken Node.js, php und Node-RED ab. Wobei letzteres über die einfache und schnelle Erstellung von Services über eine Benutzerschnittstelle am meisten zusagt.
+Diese Anforderungen an einen Webserver decken Node.js, Apache und Node-RED ab. Wobei letzteres über die einfache und schnelle Erstellung von Services über eine Benutzerschnittstelle am meisten zusagt und am wenigsten Einarbeitungszeit voraussetzt.
 \subsubsection{Node-RED}
 Node Red wurde von IBM im Jahre 2013 entwickelt und steht als Open-Source Projekt zur Verfügung\cite{nodeRed:nodeRedAbout}.\\
-Mithilfe von Node Red, das auf Node.js basiert, können Datenflüsse bzw. Flows über eine Benutzerschnittstelle im Browser zum Ausführen vom serverseitigen Aufgaben angelegt werden. Dabei werden verschiedene Knoten, auch Nodes genannt, miteinander verknüpft. \autoref{img:bspFlow} zeigt beispielhaft ein Flow auf, der aus den Knoten \acf{HTTP} Input, einer Funktion, und dem \ac{HTTP} besteht. Jeder Knoten stellt somit eine spezifische Funktionalität bereit. Der \ac{HTTP} Input Node, definiert den Eintrittspunkt bzw. den relativen Pfad, an den \ac{HTTP} Anfragen vom Client gesendet werden. Als Ergebnis liefert der angelegte Flow eine Antwort auf die \ac{HTTP} Anfrage zurück. Anwendungslogik kann durch Javascript in dem sogenannten Function Node in den Datenfluss integriert werden . Die miteinander verbundenen Knoten reichen sich außerdem Daten oder Informationen über \ac{JSON}-Objekte weiter.
-\\Schließlich können die einzelne erstellten Flows einfach innerhalb der Laufzeitumgebung deployed und ausgeführt werden. \\Durch eine große Community werden neben den standardmäßigen Knoten auch neue Knoten bereitgestellt, die den Funktionsumfang von Node Red nochmals deutlich erweitern\cite{nodeRed:nodeRed}.
+Mithilfe von Node Red, das auf Node.js basiert, können Datenflüsse bzw. Flows über eine Benutzerschnittstelle im Browser zum Ausführen vom serverseitigen Aufgaben angelegt werden. Dabei werden verschiedene Knoten, auch Nodes genannt, miteinander verknüpft. \autoref{img:bspFlow} zeigt beispielhaft ein Flow auf, der aus den Knoten \acf{HTTP} Input, einer Funktion, und dem \ac{HTTP} besteht. Jeder Knoten stellt somit eine spezifische Funktionalität bereit. Der \ac{HTTP} Input Node, definiert den Eintrittspunkt bzw. den relativen Pfad, an den \ac{HTTP} Anfragen vom Client gesendet werden. Als Ergebnis liefert der angelegte Flow eine Antwort auf die \ac{HTTP} Anfrage zurück. Die Anwendungslogik kann durch Javascript in dem sogenannten Function Node in den Datenfluss integriert werden . Die miteinander verbundenen Knoten reichen sich außerdem Daten oder Informationen über \ac{JSON}-Objekte weiter.
+\\Schließlich können die einzeln erstellten Flows einfach innerhalb der Laufzeitumgebung deployed und ausgeführt werden. \\Durch eine große Community werden neben den standardmäßigen Knoten auch neue Knoten bereitgestellt, die den Funktionsumfang von Node Red nochmals deutlich erweitern\cite{nodeRed:nodeRed}.
 \begin{figure}[H]
 	\centering	
 	\includegraphics[scale=0.8]{images/bspFlow}
@@ -32,16 +32,7 @@ Durch die Anbindung von Sensoren werden ständig neue Daten generiert. Damit die
 \\NoSQL Datenbanken benötigen kein vordefiniertes Schema, um Daten abzuspeichern. Somit ist es nicht notwendig zu wissen welche Art von Daten bzw. deren Datentypen gespeichert werden sollen. Der Vorteil ergibt sich dabei, dass zusammengehörende Daten gemeinsam an einem Ort abgespeichert werden. Der Datentyp jedes einzelnen Eintrags kann dabei von Eintrag zu Eintrag variieren. Deshalb sind für diese Datenbanklösungen Strukturänderungen im Datenformat problemlos. Sollte die Datenbank sehr groß werden und auf mehreren Servern laufen, so lassen sich diese einfach skalieren\cite{noSQL:noSQL}.
 \\Außerdem gibt es noch die Möglichkeit Daten innerhalb von relationalen Datenbanken abzuspeichern. Dabei muss zuerst ein Datenbankschema definiert werden. Hierbei ist also die abzuspeichernde Datenstruktur im Voraus bereits definiert und kann im Vergleich zu NoSQL-Datenbanken nicht einfach im Betrieb angepasst werden. Die Ablagestruktur in Tabellen sollte sich dabei am natürlichen Vorkommen der Daten (Bsp.: Name, Vorname, Straße, PLZ, Ort)  orientieren. Jede Zeile einer Relation steht für ein Tupel, das eine strikte Ordnung der Attribute voraussetzt\cite{codd:Codd}. Folglich muss beim Einfügen auf die Struktur geachtet werden.
 \\Da angenommen werden kann, dass die angeschlossenen Sensoren durchgängig gleiche Datenformate an den Raspberry Pi übermitteln und sich somit die Struktur nicht ändert, wird für den folgenden Verlauf der Arbeit ein relationales Datenmodell als Grundlage definiert.
-
-
-
-
-kompatibel, wenig bis kein schreibzugriff von außen, kleine datenmenge, ressourcenschonend, lokal
-https://www.digitalocean.com/community/tutorials/sqlite-vs-mysql-vs-postgresql-a-comparison-of-relational-database-management-systems
-\subsubsection{SQLite}
-Die SQLite Datenbank bietet für unsere definierten Einsatzzweck ausreichende Funktionalität an. Die Anwendung ist leichtgewichtig und läuft lokal. Außerdem verfolgt die Datenbank bei Transaktionen das ACID (atomic, consistent, isolated, durable) Prinzip. Datenbankzugriffe geschehen mit SQL. Alle Datenbanktabellen sind lokal in einer Datenbank-Datei gespeichert. Dies kann somit einfach kopiert werden, falls ein neuer Raspberry zum Einsatz kommen sollte.\\
-Da jeder Raspberry seine eigene Datenbank besitzen sollte, damit keine privaten Daten zentral auf einer Datenbank abgelegt werden eignet sich SQLite ebenfalls gut.   https://www.sqlite.org/features.html
-DATENTYPEN? TEXT, INTEGER, REAL, BLOB, NUMERIC, BOOLEAN, DATETIME 
+\\\\Da der Raspberry Pi vergleichsweise wenig Hardwareressourcen besitzt, muss darauf geachtet werden, dass die Datenbank ressourcenschonend arbeitet. Die Datenbank soll lokal vom Raspberry betrieben und muss nur wenige bis keine von extern über das Netzwerk kommenden Datenbankeinträge erstellen.\\Im Vergleich zwischen der SQLite und der MySql Datenbanklösung fällt die Entscheidung auf SQLite. Diese Lösung bringt für das Abspeichern von Daten alle notwendigen Funktionalitäten mit, wie Datenbankzugriff mit \acf{SQL} oder die vorhandenen Datentypen \cite{sqlite:sqlite2}, ohne jedoch wie MySql  viele Features anzubieten, die für diese Arbeit nicht gebraucht werden. Beispiel hierfür wäre ein eigener Datenbankserver, mit dem Anwendungen über einen Prozess kommunizieren müssen. Außerdem werden Datenbankeinträge nur vom einem Raspberry Pi erzeugt, der dann Embeded System angesehen werden kann und somit die SQLite Datenbank ausreicht. Die Größe der Datenmenge wird nicht dazu führen, dass schnell eine mehrere Gigabyte große Datenbank entsteht, die dann skaliert  und dafür eine andere Lösung als SQLite eingesetzt werden muss.\cite{sqlite:sqlite}
 
 
 \section{Regelbasiertes System} \chapterauthor{Louisa Pabst}
