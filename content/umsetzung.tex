@@ -12,8 +12,8 @@ Jede Tabelle besitzt pro Relation eine eindeutige ID. Dies hilft einen Datensatz
 Daten aus dem DHT22 Sensor (Temperatur- \& Luftfeuchte) werden in der Tabelle DHT in den folgenden Spalten abgespeichert:
 \begin{itemize}
 	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
-	\item \textbf{Temperature}: Temperaturwert wird als REAL Number gespeichert.
-	\item \textbf{Humidity}: Wert der Luftfeutchtigkeit wird als REAL Number gespeichert.
+	\item \textbf{Temperature}: Temperaturwert in Celsius wird als REAL Number gespeichert.
+	\item \textbf{Humidity}: Prozentwert der Luftfeutchtigkeit wird als REAL Number gespeichert.
 	\item \textbf{Sensorid}: Text, der angibt um welche Art von Temperatur- \& Luftfeuchtigkeitssensor es sich handelt.
 	\item \textbf{Timestamp}: Zeitstempel wird in Millisekunden als Integer gespeichert
 \end{itemize}
@@ -29,9 +29,9 @@ Die Window Tabelle nimmt die Werte des Magnetkontakts entgegen und speichert die
 Der MQ-135 Sensor speichert die verschiedenen Werte der Gase CO2, CO und NH4 in folgenden Spalten ab.
 \begin{itemize}
 	\item \textbf{ID}: Primärschlüssel, der nicht leer sein darf und sich inkrementell erhöht.  
-	\item \textbf{CO2}: CO2 Wert wird als REAL abgespeichert.
-	\item \textbf{CO}: CO Wert wird als REAL abgespeichert.
-	\item \textbf{NH4}: NH4 Wert wird als REAL abgespeichert. 
+	\item \textbf{CO2}: CO2 Wert in parts per million (ppm) wird als REAL abgespeichert.
+	\item \textbf{CO}: CO Wert (ppm) wird als REAL abgespeichert.
+	\item \textbf{NH4}: NH4 Wert (ppm) wird als REAL abgespeichert. 
 	\item \textbf{Timestamp}: Zeitstempel wird in Millisekunden als Integer gespeichert
 \end{itemize}
 
@@ -50,7 +50,7 @@ Sobald die Bibliothek Motion eine Bewegung erkennt, wird automatisch ein Datenba
 Im folgenden Abschnitt wird beschrieben, wie der Raspberry mit den Sensoren interagiert, die Daten speichert und anschließend über Services bereitstellt.
 
 \subsection{Sensor Adapter - Datenbeschaffung}
-Die zentral Einheit um Sensoren in die Anwendung zu integrieren bildet der Raspberry Pi. Dabei spielen dessen externe Schnittstellen eine wesentliche Rolle. Allerdings liegt der Fokus dieser Arbeit auf der Datenbereitstellung über einen Webserver und dem Verarbeiten, sowie Anzeigen in der App, weshalb teilweise auf bereits bestehende Lösungen zurückgegriffen wird.
+Der Raspberry Pi bildet die zentrale Einheit, um verschiedene Sensoren in eine Anwendung zu integrieren. Dabei spielen dessen externe Schnittstellen eine wesentliche Rolle. Allerdings liegt der Fokus dieser Arbeit auf der Datenbereitstellung über einen Webserver und dem Verarbeiten, sowie Anzeigen in der App, weshalb teilweise auf bereits bestehende Lösungen zurückgegriffen wird.
 \\\\Das \acf{CSI} stellt eine Möglichkeit dar, eine eigens für den Raspberry Pi entworfene Kamera anzuschließen. Das Kameramodul kann dann über entsprechende Befehle über die Kommandozeile des Raspberry gesteuert werden. Aus den Anforderung F-10.1 geht hervor, dass Bilder bei erkannter Bewegung gespeichert und einen Livestream umgesetzt werden sollen.\\Die Anzeige eines Live-Bildes könnte über eine sekündliche Aufnahme, die über eine Service unter einer Internetadresse verfügbar gemacht wird, umgesetzt werden. Ob innerhalb eines Bildes Bewegung erkannt wurde, könnte durch eine Vergleich eines Referenzbildes und dem aktuellen Bild ermittelt werden.\\Allerdings bietet diese Funktionalitäten bereits das Open-Source Programm \enquote{Motion} an. Es ist in der Lage Bewegung zu erkennen, Live-Bilder anzuzeigen, sowie das Abspeichern von Events bei erkannten Bewegungen\cite{motion:Motion}\\
 \\Motion wurde so konfiguriert, dass der Livestream über die \ac{IP}-Adresse des Raspberry Pis und dem Port 8081 erreichbar ist. Bewegung wird erkannt, wenn sich drei aufeinanderfolgenden Bildern um 15000 Pixel zum Referenzbild unterscheiden. Dabei ist eine Auflösung von 640x480 Pixel gewählt. Wenn für sieben Sekunden keine Bewegung mehr wahrgenommen wird, ist das Event beendet. Für jedes Event wird in der Tabelle Security (siehe \autoref{db:DB}) ein Datenbankeintrag erstellt. Außerdem wird ein Video in einem definierten Verzeichnis abgespeichert, das die ganze Sequenz der Bewegungserkennung enthält. Nachdem das Video erstellt wurde, wird außerdem noch ein Bild abgespeichert, das durch die Software analysiert wurde und später dem Anwender der App dargestellt wird. Dadurch erhält der Anwender frühzeitig Klarheit, wer sich im Raum befindet.
 \\\\
@@ -172,7 +172,7 @@ Nachdem die Abfrage im entsprechenden Objekt vorliegt kann der Datenbank Knoten 
 \end{lstlisting}
 
 \section{Grafische Benutzeroberfläche}
-Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann.
+Als grafische Benutzerschnittstelle für das in dieser Arbeit erläuterte System wird eine ortsunabhängige Lösung entwickelt (F-10.2). Um eine Ortsunabhängigkeit gewährleisten zu können, bietet es sich an ein mobiles Endgerät zu entwickeln. Es wurde  entschieden als Benutzerschnittstelle eine Android App zu nutzen, aus dem Grund, dass Android den höchsten Endkundenabsatz besitzt \cite{statista:marktanteileandroid} und dadurch eine größere Maße erreicht werden kann. Die Startseite der Anwendung ist in \autoref{label:appMain} dargestellt.
 \subsection{Rule Engine}\chapterauthor{Louisa Pabst}
 Vor Beginn der Entwicklung muss die Struktur von Regeln analysiert werden. Eine Regel besteht aus einem Wenn-Teil und dem Dann-Teil. Der Wenn-Teil wiederum kann aus mehreren einzelnen Wenn-Teilen zu einem übergreifenden Wenn-Teil zusammengefasst werden. Das Zusammenfassen mehrerer Wenn-Teilen führt zu mehr Regelmöglichkeiten. Der gleiche Grund kommt bei dem Dann-Teil zum Tragen. Gerade im Hinblick auf die Integration von weiteren Akteuren (F-60.2) ist es sinnvoll mehrere Akteure innerhalb eine Regel auslösen zu können.\\
 Ein einzelner Wenn-Teil der Regel besteht aus einem Datentypen, Vergleichsoperator/en, Vergleichsdaten und einer Konjunktion zu einem anderen Wenn-Teil. Um dem Nutzer eine intuitivere Anwendung bieten zu können, werden Vergleichsoperatoren in Regeln angeboten, die aus zwei Operatoren bestehen. So können Vergleichsoperatoren, wie ``zwischen'' gewährleistet werden. Ein Wert ist dann zwischen zwei Werten, wenn der Datenwert größer als Vergleichswert 1 und kleiner als Vergleichswert 2 ist. Innerhalb der Rule Engine wird dementsprechend zwischen klassischen binären Operatoren und zusammengesetzten binären Operatoren unterschieden. Binäre Operatoren vergleichen zwei Werte miteinander QUELLE.\\
@@ -246,4 +246,99 @@ Bei der Häufigkeit der Benachrichtigungen an den Nutzer muss darauf geachtet we
 %--> Sequenzdiagramm - Aufrufe von Übermittlung der Daten bis Auslösung der Aktion
 
 
-\subsection{Daten Anzeige}
+\subsection{Daten Anzeige}\chapterauthor{Dominic Steinhauser}
+\autoref{label:main} die Startseite der Anwendung. Sie bietet schnellen Zugriff auf alle ausführbaren Aktionen in der App.
+\\Beim Aufrufen der \enquote{AirQuality}-View wird eine \ac{HTTP} Anfragen an den Webserver gesendet. Die zurückgelieferten Ergebnisse werden in \autoref{label:airquality} neben ihrer Beschreibung dynamisch gesetzt. Da allerdings nur die aktuellen Sensorwerte in dieser Ansicht angezeigt werden, kann der Anwender über den Pfeil zur nächsten Seite navigieren, die es dann ermöglicht den Verlauf der Daten anzuzeigen. 
+
+\begin{minipage}[c]{0.5\textwidth}
+	\centering
+	\includegraphics[scale=0.1]{images/appMain}
+	\captionof{figure}{Startseite der App}
+	\label{label:main}	
+\end{minipage}
+\begin{minipage}[c]{0.5\textwidth}
+	\centering
+	\includegraphics[scale=0.1]{images/airQuality}
+	\captionof{figure}{AirQuality}
+	\label{label:airquality}
+\end{minipage}
+
+Bevor dem Benutzer Daten angezeigt werden, muss dieser zuerst ein Intervall angeben. Dazu wird eine Eingabe über ein Start, sowie ein Enddatum notwendig. Wird nach erfolgreicher Auswahl des Intervalls der \enquote{Show Data} Button geklickt, siehe \autoref{label:tempVerlauf}, wird an den Webserver eine \ac{HTTP} Anfrage geschickt, die entweder für den angegebenen Zeitraum alle Temperatur und Luftfeuchtigkeitswerte oder MQ-135 Daten in einem \ac{JSON}-Array zurückliefert. 
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.1]{images/appVerlauf}
+	\caption{Diagramm Temperaturverlauf}
+	\label{label:temVerlauf}
+\end{figure}
+
+\autoref{list:Array} zeigt als Beispiel das \ac{JSON}-Array auf, das vom Webserver als Response gesendet wird. 
+\begin{lstlisting}[label=list:Array, caption={Beispiel: JSON Array}]
+[
+	{
+		"id": 1184,
+		"temperature": 25.8,
+		"humidity": 47.9,
+		"sensorid": "dht22",
+		"timestamp": 1495971295531
+	},
+	{
+		"id": 1185,
+		"temperature": 25.8,
+		"humidity": 47.9,
+		"sensorid": "dht22",
+		"timestamp": 1495971595619
+	},
+	{
+		"id": 1186,
+		"temperature": 25.9,
+		"humidity": 47.8,
+		"sensorid": "dht22",
+		"timestamp": 1495971895672
+	}
+]
+\end{lstlisting}
+
+Damit nun die Daten in einem Liniendiagramm grafisch dargestellt werden können, ist es notwendig die Bibliothek zu verwenden. Dabei viel die Auswahl auf \enquote{MPAndroidChart}\footcite{https://github.com/PhilJay/MPAndroidChart}. Allerdings gibt es viele verschiedene Bibliotheken, die als Open-Source-Software sich für diesen Zweck eignen.\\
+Sobald die Webserver Response als String vorliegt, kann die in \autoref{label:getTem} aufgezeigte Funktion mit der Auswertung des Arrays beginnen. Dabei wird innerhalb der For-Schleife aus jedem \ac{JSON} Objekt der Temperatur- und Luftfeuchtigkeitswert ausgelesen. Die jeweiligen Werte müssen dann der entsprechenden ArrayListe als Entry übergeben werden (vgl. \autoref{label:getTem} Zeile 8ff). Ein Entry entspricht dabei einem Tupel aus zwei Werten für die x und y Koordinate.\\Nachdem alle Werte in der ArrayList \enquote{tempList} bzw. \enquote{humidityList} gespeichert sind, muss eine neue LineDataSet erzeugt werden, die passend zu den Werten noch eine Beschreibung hinzufügt. \\
+Damit nun beide LineDataSets in einem Diagramm angezeigt werden können, wird in Zeile 22 eine neue ArrayListe definiert und bei LineDataSets hinzugefügt. Abschließend ein neues LineData Object erstellt und zurückgegeben werden. 
+
+\begin{lstlisting}[label=label:getTem][h]
+public LineData getTemHumDataForDiagramm(String s){
+
+	List<Entry> tempList = new ArrayList<Entry>();
+	List<Entry> humidityList = new ArrayList<Entry>();
+	
+	try{
+		JSONArray jsonMainNode = new JSONArray(s);
+		for(int i = 0; i < jsonMainNode.length(); i++){
+			JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+			Float temperature = BigDecimal.valueOf(jsonChildNode.getDouble("temperature")).floatValue();
+			tempList.add(new Entry((float)i, temperature));
+			Float humidity = BigDecimal.valueOf(jsonChildNode.getDouble("humidity")).floatValue();
+			humidityList.add(new Entry((float)i, humidity));
+		}
+	} catch (JSONException e){
+		Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_SHORT).show();
+	}
+	
+	LineDataSet dataSetHum = new LineDataSet(humidityList,"Humidity (%)");	
+	LineDataSet dataSetTemp = new LineDataSet(tempList,"Temperature (C)");
+		
+	List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+	dataSets.add(dataSetTemp);
+	dataSets.add(dataSetHum);
+	
+	LineData data = new LineData(dataSets);
+	
+	return data;
+}
+\end{lstlisting}
+
+Damit nun die Daten im Diagramm angezeigt werden, müssen dem LineChart Objekt über die Methode \enquote{setData} die Daten übergeben werden. 
+\begin{lstlisting}[label=list:showData]
+LineChart chart = (LineChart) findViewById(R.id.chart);
+LineData data = getTemHumDataForDiagramm(String s)
+chart.setData(data)
+\end{lstlisting}
+
